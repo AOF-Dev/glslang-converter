@@ -77,6 +77,7 @@ set(MACHINEINDEPENDENT_SOURCES
     MachineIndependent/SymbolTable.cpp
     MachineIndependent/Versions.cpp
     MachineIndependent/intermOut.cpp
+    MachineIndependent/intermConv.cpp
     MachineIndependent/limits.cpp
     MachineIndependent/linkValidate.cpp
     MachineIndependent/parseConst.cpp

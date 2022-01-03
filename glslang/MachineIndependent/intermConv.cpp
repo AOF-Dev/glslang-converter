@@ -95,9 +95,9 @@ namespace glslang {
 // Use this class to carry along data from node to node in
 // the traversal
 //
-class TOutputTraverser : public TIntermTraverser {
+class TConvertTraverser : public TIntermTraverser {
 public:
-    TOutputTraverser(TInfoSink& i) : infoSink(i), extraOutput(NoExtraOutput) { }
+    TConvertTraverser(TInfoSink& i) : infoSink(i), extraOutput(NoExtraOutput) { }
 
     enum EExtraOutput {
         NoExtraOutput,
@@ -117,8 +117,8 @@ public:
 
     TInfoSink& infoSink;
 protected:
-    TOutputTraverser(TOutputTraverser&);
-    TOutputTraverser& operator=(TOutputTraverser&);
+    TConvertTraverser(TConvertTraverser&);
+    TConvertTraverser& operator=(TConvertTraverser&);
 
     EExtraOutput extraOutput;
 };
@@ -150,7 +150,7 @@ static void OutputTreeText(TInfoSink& infoSink, const TIntermNode* node, const i
 // return false.
 //
 
-bool TOutputTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
+bool TConvertTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
 {
     TInfoSink& out = infoSink;
 
@@ -231,7 +231,7 @@ bool TOutputTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
     return true;
 }
 
-bool TOutputTraverser::visitUnary(TVisit /* visit */, TIntermUnary* node)
+bool TConvertTraverser::visitUnary(TVisit /* visit */, TIntermUnary* node)
 {
     TInfoSink& out = infoSink;
 
@@ -710,7 +710,7 @@ bool TOutputTraverser::visitUnary(TVisit /* visit */, TIntermUnary* node)
     return true;
 }
 
-bool TOutputTraverser::visitAggregate(TVisit /* visit */, TIntermAggregate* node)
+bool TConvertTraverser::visitAggregate(TVisit /* visit */, TIntermAggregate* node)
 {
     TInfoSink& out = infoSink;
 
@@ -1146,7 +1146,7 @@ bool TOutputTraverser::visitAggregate(TVisit /* visit */, TIntermAggregate* node
     return true;
 }
 
-bool TOutputTraverser::visitSelection(TVisit /* visit */, TIntermSelection* node)
+bool TConvertTraverser::visitSelection(TVisit /* visit */, TIntermSelection* node)
 {
     TInfoSink& out = infoSink;
 
@@ -1193,7 +1193,7 @@ bool TOutputTraverser::visitSelection(TVisit /* visit */, TIntermSelection* node
 //   - shows all possible IEEE values
 //   - shows simple numbers in a simple way, e.g., no leading/trailing 0s
 //   - shows all digits, no premature rounding
-static void OutputDouble(TInfoSink& out, double value, TOutputTraverser::EExtraOutput extra)
+static void OutputDouble(TInfoSink& out, double value, TConvertTraverser::EExtraOutput extra)
 {
     if (IsInfinity(value)) {
         if (value < 0)
@@ -1224,7 +1224,7 @@ static void OutputDouble(TInfoSink& out, double value, TOutputTraverser::EExtraO
         out.debug << buf;
 
         switch (extra) {
-        case TOutputTraverser::BinaryDoubleOutput:
+        case TConvertTraverser::BinaryDoubleOutput:
         {
             uint64_t b;
             static_assert(sizeof(b) == sizeof(value), "sizeof(uint64_t) != sizeof(double)");
@@ -1244,7 +1244,7 @@ static void OutputDouble(TInfoSink& out, double value, TOutputTraverser::EExtraO
 }
 
 static void OutputConstantUnion(TInfoSink& out, const TIntermTyped* node, const TConstUnionArray& constUnion,
-    TOutputTraverser::EExtraOutput extra, int depth)
+    TConvertTraverser::EExtraOutput extra, int depth)
 {
     int size = node->getType().computeNumComponents();
 
@@ -1349,7 +1349,7 @@ static void OutputConstantUnion(TInfoSink& out, const TIntermTyped* node, const 
     }
 }
 
-void TOutputTraverser::visitConstantUnion(TIntermConstantUnion* node)
+void TConvertTraverser::visitConstantUnion(TIntermConstantUnion* node)
 {
     OutputTreeText(infoSink, node, depth);
     infoSink.debug << "Constant:\n";
@@ -1357,7 +1357,7 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion* node)
     OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, depth + 1);
 }
 
-void TOutputTraverser::visitSymbol(TIntermSymbol* node)
+void TConvertTraverser::visitSymbol(TIntermSymbol* node)
 {
     OutputTreeText(infoSink, node, depth);
 
@@ -1372,7 +1372,7 @@ void TOutputTraverser::visitSymbol(TIntermSymbol* node)
     }
 }
 
-bool TOutputTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
+bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
 {
     TInfoSink& out = infoSink;
 
@@ -1420,7 +1420,7 @@ bool TOutputTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
     return false;
 }
 
-bool TOutputTraverser::visitBranch(TVisit /* visit*/, TIntermBranch* node)
+bool TConvertTraverser::visitBranch(TVisit /* visit*/, TIntermBranch* node)
 {
     TInfoSink& out = infoSink;
 
@@ -1451,7 +1451,7 @@ bool TOutputTraverser::visitBranch(TVisit /* visit*/, TIntermBranch* node)
     return false;
 }
 
-bool TOutputTraverser::visitSwitch(TVisit /* visit */, TIntermSwitch* node)
+bool TConvertTraverser::visitSwitch(TVisit /* visit */, TIntermSwitch* node)
 {
     TInfoSink& out = infoSink;
 
@@ -1485,7 +1485,7 @@ bool TOutputTraverser::visitSwitch(TVisit /* visit */, TIntermSwitch* node)
 // Individual functions can be initialized to 0 to skip processing of that
 // type of node.  It's children will still be processed.
 //
-void TIntermediate::output(TInfoSink& infoSink, bool tree)
+void TIntermediate::convert(TInfoSink& infoSink, bool tree)
 {
     infoSink.debug << "Shader version: " << version << "\n";
     if (requestedExtensions.size() > 0) {
@@ -1581,9 +1581,9 @@ void TIntermediate::output(TInfoSink& infoSink, bool tree)
     if (treeRoot == 0 || ! tree)
         return;
 
-    TOutputTraverser it(infoSink);
+    TConvertTraverser it(infoSink);
     if (getBinaryDoubleOutput())
-        it.setDoubleOutput(TOutputTraverser::BinaryDoubleOutput);
+        it.setDoubleOutput(TConvertTraverser::BinaryDoubleOutput);
     treeRoot->traverse(&it);
 }
 

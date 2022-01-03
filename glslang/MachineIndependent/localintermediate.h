@@ -623,6 +623,7 @@ public:
     ComputeDerivativeMode getLayoutDerivativeModeNone() const { return LayoutDerivativeNone; }
 #else
     void output(TInfoSink&, bool tree);
+    void convert(TInfoSink&, bool tree);
 
     bool isEsProfile() const { return profile == EEsProfile; }
 
