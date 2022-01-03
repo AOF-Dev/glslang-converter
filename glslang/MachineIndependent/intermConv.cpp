@@ -787,9 +787,10 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpBitwiseNot:
 
         case EOpPreIncrement:
-        case EOpPreDecrement:
-        case EOpPostIncrement:
-        case EOpPostDecrement: out.debug << ""; break;
+        case EOpPreDecrement: break;
+
+        case EOpPostIncrement: out.debug << "++"; break;
+        case EOpPostDecrement: out.debug << "--"; break;
 
         default: out.debug << ")";
         }
