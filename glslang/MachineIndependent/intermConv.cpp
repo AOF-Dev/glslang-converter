@@ -101,7 +101,7 @@ class TConvertTraverser : public TIntermTraverser {
 public:
     TConvertTraverser(TInfoSink& i) : TIntermTraverser(true, true, true, false),
         infoSink(i), extraOutput(NoExtraOutput), lastLine(0), lastFile(0), level(0),
-        declaringSymbol(0), skipped(false), swizzling(false) {
+        declaringSymbol(0), skipped(false), swizzling(false), visitingFunction(false) {
         sequenceSeperator.push("");
         sequenceEnd.push("");
     }
@@ -129,6 +129,7 @@ public:
     int declaringSymbol;
     bool skipped;
     bool swizzling;
+    bool visitingFunction;
     std::stack<const char*> sequenceSeperator;
     std::stack<const char*> sequenceEnd;
     std::unordered_set<TString> globalSymbols;
@@ -813,6 +814,9 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             const char* sep = sequenceSeperator.top();
             sequenceSeperator.push(sep);
             sequenceEnd.push("");
+            if (!visitingFunction) {
+                declaringSymbol = 1;
+            }
             break;
         }
         case EOpLinkerObjects: declaringSymbol = 1; break;
@@ -828,6 +832,7 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             sequenceSeperator.push(";");
             sequenceEnd.push(";");
             localSymbols.clear();
+            visitingFunction = true;
             level++;
             break;
         }
@@ -1297,7 +1302,13 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             sequenceSeperator.pop();
             sequenceEnd.pop();
             if (!skipped) {
-                out.debug << sequenceEnd.top();
+                if (declaringSymbol == 1) {
+                    out.debug << ";";
+                    declaringSymbol = 0;
+                }
+                else {
+                    out.debug << sequenceEnd.top();
+                }
             }
             else {
                 skipped = false;
@@ -1305,6 +1316,7 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             break;
         }
         case EOpFunction: {
+            visitingFunction = false;
             level--;
             gotoNewLine();
             out.debug << "}";
