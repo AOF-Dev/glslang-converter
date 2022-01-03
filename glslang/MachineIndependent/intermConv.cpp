@@ -449,20 +449,20 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpConvUint64ToAccStruct: out.debug << "Convert uint64_t to acceleration structure"; break;
         case EOpConvUvec2ToAccStruct:  out.debug << "Convert uvec2 to acceleration strucuture "; break;
 
-        case EOpRadians:        out.debug << "radians";              break;
-        case EOpDegrees:        out.debug << "degrees";              break;
-        case EOpSin:            out.debug << "sine";                 break;
-        case EOpCos:            out.debug << "cosine";               break;
-        case EOpTan:            out.debug << "tangent";              break;
-        case EOpAsin:           out.debug << "arc sine";             break;
-        case EOpAcos:           out.debug << "arc cosine";           break;
-        case EOpAtan:           out.debug << "arc tangent";          break;
-        case EOpSinh:           out.debug << "hyp. sine";            break;
-        case EOpCosh:           out.debug << "hyp. cosine";          break;
-        case EOpTanh:           out.debug << "hyp. tangent";         break;
-        case EOpAsinh:          out.debug << "arc hyp. sine";        break;
-        case EOpAcosh:          out.debug << "arc hyp. cosine";      break;
-        case EOpAtanh:          out.debug << "arc hyp. tangent";     break;
+        case EOpRadians:        out.debug << "radians("; break;
+        case EOpDegrees:        out.debug << "degrees("; break;
+        case EOpSin:            out.debug << "sin(";     break;
+        case EOpCos:            out.debug << "cos(";     break;
+        case EOpTan:            out.debug << "tan(";     break;
+        case EOpAsin:           out.debug << "asin(";    break;
+        case EOpAcos:           out.debug << "acos(";    break;
+        case EOpAtan:           out.debug << "atan(";    break;
+        case EOpSinh:           out.debug << "sinh(";    break;
+        case EOpCosh:           out.debug << "cosh(";    break;
+        case EOpTanh:           out.debug << "tanh(";    break;
+        case EOpAsinh:          out.debug << "asinh(";   break;
+        case EOpAcosh:          out.debug << "acosh(";   break;
+        case EOpAtanh:          out.debug << "atanh(";   break;
 
         case EOpExp:            out.debug << "exp";                  break;
         case EOpLog:            out.debug << "log";                  break;
@@ -897,7 +897,22 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpConvDoubleToUint8:
         case EOpConvDoubleToUint16:
         case EOpConvDoubleToUint:
-        case EOpConvDoubleToUint64: out.debug << ")"; break;
+        case EOpConvDoubleToUint64:
+
+        case EOpRadians:
+        case EOpDegrees:
+        case EOpSin:
+        case EOpCos:
+        case EOpTan:
+        case EOpAsin:
+        case EOpAcos:
+        case EOpAtan:
+        case EOpSinh:
+        case EOpCosh:
+        case EOpTanh:
+        case EOpAsinh:
+        case EOpAcosh:
+        case EOpAtanh: out.debug << ")"; break;
         }
     }
 
