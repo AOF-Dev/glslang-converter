@@ -274,7 +274,7 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         tryNewLine(node);
         switch (node->getOp()) {
         case EOpNegative:       out.debug << "-";         break;
-        case EOpVectorLogicalNot:
+        case EOpVectorLogicalNot: out.debug << "not(";   break;
         case EOpLogicalNot:     out.debug << "!";   break;
         case EOpBitwiseNot:     out.debug << "~";          break;
 
@@ -496,22 +496,22 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpSqrt:           out.debug << "sqrt(";        break;
         case EOpInverseSqrt:    out.debug << "inversesqrt("; break;
 
-        case EOpAbs:            out.debug << "Absolute value";       break;
-        case EOpSign:           out.debug << "Sign";                 break;
-        case EOpFloor:          out.debug << "Floor";                break;
-        case EOpTrunc:          out.debug << "trunc";                break;
-        case EOpRound:          out.debug << "round";                break;
-        case EOpRoundEven:      out.debug << "roundEven";            break;
-        case EOpCeil:           out.debug << "Ceiling";              break;
-        case EOpFract:          out.debug << "Fraction";             break;
+        case EOpAbs:            out.debug << "abs(";       break;
+        case EOpSign:           out.debug << "sign(";                 break;
+        case EOpFloor:          out.debug << "floor(";                break;
+        case EOpTrunc:          out.debug << "trunc(";                break;
+        case EOpRound:          out.debug << "round(";                break;
+        case EOpRoundEven:      out.debug << "roundEven(";            break;
+        case EOpCeil:           out.debug << "ceil(";              break;
+        case EOpFract:          out.debug << "fract(";             break;
 
-        case EOpIsNan:          out.debug << "isnan";                break;
-        case EOpIsInf:          out.debug << "isinf";                break;
+        case EOpIsNan:          out.debug << "isnan(";                break;
+        case EOpIsInf:          out.debug << "isinf(";                break;
 
-        case EOpFloatBitsToInt: out.debug << "floatBitsToInt";       break;
-        case EOpFloatBitsToUint:out.debug << "floatBitsToUint";      break;
-        case EOpIntBitsToFloat: out.debug << "intBitsToFloat";       break;
-        case EOpUintBitsToFloat:out.debug << "uintBitsToFloat";      break;
+        case EOpFloatBitsToInt: out.debug << "floatBitsToInt(";       break;
+        case EOpFloatBitsToUint:out.debug << "floatBitsToUint(";      break;
+        case EOpIntBitsToFloat: out.debug << "intBitsToFloat(";       break;
+        case EOpUintBitsToFloat:out.debug << "uintBitsToFloat(";      break;
         case EOpDoubleBitsToInt64:  out.debug << "doubleBitsToInt64";  break;
         case EOpDoubleBitsToUint64: out.debug << "doubleBitsToUint64"; break;
         case EOpInt64BitsToDouble:  out.debug << "int64BitsToDouble";  break;
@@ -521,12 +521,12 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpInt16BitsToFloat16:  out.debug << "int16BitsToFloat16";  break;
         case EOpUint16BitsToFloat16: out.debug << "uint16BitsToFloat16"; break;
 
-        case EOpPackSnorm2x16:  out.debug << "packSnorm2x16";        break;
-        case EOpUnpackSnorm2x16:out.debug << "unpackSnorm2x16";      break;
-        case EOpPackUnorm2x16:  out.debug << "packUnorm2x16";        break;
-        case EOpUnpackUnorm2x16:out.debug << "unpackUnorm2x16";      break;
-        case EOpPackHalf2x16:   out.debug << "packHalf2x16";         break;
-        case EOpUnpackHalf2x16: out.debug << "unpackHalf2x16";       break;
+        case EOpPackSnorm2x16:  out.debug << "packSnorm2x16(";        break;
+        case EOpUnpackSnorm2x16:out.debug << "unpackSnorm2x16(";      break;
+        case EOpPackUnorm2x16:  out.debug << "packUnorm2x16(";        break;
+        case EOpUnpackUnorm2x16:out.debug << "unpackUnorm2x16(";      break;
+        case EOpPackHalf2x16:   out.debug << "packHalf2x16(";         break;
+        case EOpUnpackHalf2x16: out.debug << "unpackHalf2x16(";       break;
         case EOpPack16:           out.debug << "pack16";                 break;
         case EOpPack32:           out.debug << "pack32";                 break;
         case EOpPack64:           out.debug << "pack64";                 break;
@@ -558,11 +558,11 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpPackFloat2x16:    out.debug << "packFloat2x16";      break;
         case EOpUnpackFloat2x16:  out.debug << "unpackFloat2x16";    break;
 
-        case EOpLength:         out.debug << "length";               break;
-        case EOpNormalize:      out.debug << "normalize";            break;
+        case EOpLength:         out.debug << "length(";               break;
+        case EOpNormalize:      out.debug << "normalize(";            break;
         case EOpDPdx:           out.debug << "dPdx";                 break;
         case EOpDPdy:           out.debug << "dPdy";                 break;
-        case EOpFwidth:         out.debug << "fwidth";               break;
+        case EOpFwidth:         out.debug << "fwidth(";               break;
         case EOpDPdxFine:       out.debug << "dPdxFine";             break;
         case EOpDPdyFine:       out.debug << "dPdyFine";             break;
         case EOpFwidthFine:     out.debug << "fwidthFine";           break;
@@ -572,12 +572,12 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
 
         case EOpInterpolateAtCentroid: out.debug << "interpolateAtCentroid";  break;
 
-        case EOpDeterminant:    out.debug << "determinant";          break;
-        case EOpMatrixInverse:  out.debug << "inverse";              break;
-        case EOpTranspose:      out.debug << "transpose";            break;
+        case EOpDeterminant:    out.debug << "determinant(";          break;
+        case EOpMatrixInverse:  out.debug << "inverse(";              break;
+        case EOpTranspose:      out.debug << "transpose(";            break;
 
-        case EOpAny:            out.debug << "any";                  break;
-        case EOpAll:            out.debug << "all";                  break;
+        case EOpAny:            out.debug << "any(";                  break;
+        case EOpAll:            out.debug << "all(";                  break;
 
         case EOpArrayLength:    out.debug << "array length";         break;
 
@@ -738,216 +738,16 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
     }
     else if (visit == EvPostVisit) {
         switch (node->getOp()) {
-        case EOpPostIncrement:  out.debug << "++";       break;
-        case EOpPostDecrement:  out.debug << "--";       break;
-        // * -> bool
-        case EOpConvInt8ToBool:
-        case EOpConvUint8ToBool:
-        case EOpConvInt16ToBool:
-        case EOpConvUint16ToBool:
-        case EOpConvIntToBool:
-        case EOpConvUintToBool:
-        case EOpConvInt64ToBool:
-        case EOpConvUint64ToBool:
-        case EOpConvFloat16ToBool:
-        case EOpConvFloatToBool:
-        case EOpConvDoubleToBool:
+        case EOpNegative:
+        case EOpLogicalNot:
+        case EOpBitwiseNot:
 
-        // bool -> *
-        case EOpConvBoolToInt8:
-        case EOpConvBoolToUint8:
-        case EOpConvBoolToInt16:
-        case EOpConvBoolToUint16:
-        case EOpConvBoolToInt:
-        case EOpConvBoolToUint:
-        case EOpConvBoolToInt64:
-        case EOpConvBoolToUint64:
-        case EOpConvBoolToFloat16:
-        case EOpConvBoolToFloat:
-        case EOpConvBoolToDouble:
+        case EOpPreIncrement:
+        case EOpPreDecrement:
+        case EOpPostIncrement:
+        case EOpPostDecrement: out.debug << ""; break;
 
-        // int8_t -> (u)int*
-        case EOpConvInt8ToInt16:
-        case EOpConvInt8ToInt:
-        case EOpConvInt8ToInt64:
-        case EOpConvInt8ToUint8:
-        case EOpConvInt8ToUint16:
-        case EOpConvInt8ToUint:
-        case EOpConvInt8ToUint64:
-
-        // uint8_t -> (u)int*
-        case EOpConvUint8ToInt8:
-        case EOpConvUint8ToInt16:
-        case EOpConvUint8ToInt:
-        case EOpConvUint8ToInt64:
-        case EOpConvUint8ToUint16:
-        case EOpConvUint8ToUint:
-        case EOpConvUint8ToUint64:
-
-        // int8_t -> float*
-        case EOpConvInt8ToFloat16:
-        case EOpConvInt8ToFloat:
-        case EOpConvInt8ToDouble:
-
-        // uint8_t -> float*
-        case EOpConvUint8ToFloat16:
-        case EOpConvUint8ToFloat:
-        case EOpConvUint8ToDouble:
-
-        // int16_t -> (u)int*
-        case EOpConvInt16ToInt8:
-        case EOpConvInt16ToInt:
-        case EOpConvInt16ToInt64:
-        case EOpConvInt16ToUint8:
-        case EOpConvInt16ToUint16:
-        case EOpConvInt16ToUint:
-        case EOpConvInt16ToUint64:
-
-        // int16_t -> float*
-        case EOpConvInt16ToFloat16:
-        case EOpConvInt16ToFloat:
-        case EOpConvInt16ToDouble:
-
-        // uint16_t -> (u)int*
-        case EOpConvUint16ToInt8:
-        case EOpConvUint16ToInt16:
-        case EOpConvUint16ToInt:
-        case EOpConvUint16ToInt64:
-        case EOpConvUint16ToUint8:
-        case EOpConvUint16ToUint:
-        case EOpConvUint16ToUint64:
-
-        // uint16_t -> float*
-        case EOpConvUint16ToFloat16:
-        case EOpConvUint16ToFloat:
-        case EOpConvUint16ToDouble:
-
-        // int32_t -> (u)int*
-        case EOpConvIntToInt8:
-        case EOpConvIntToInt16:
-        case EOpConvIntToInt64:
-        case EOpConvIntToUint8:
-        case EOpConvIntToUint16:
-        case EOpConvIntToUint:
-        case EOpConvIntToUint64:
-
-        // int32_t -> float*
-        case EOpConvIntToFloat16:
-        case EOpConvIntToFloat:
-        case EOpConvIntToDouble:
-
-        // uint32_t -> (u)int*
-        case EOpConvUintToInt8:
-        case EOpConvUintToInt16:
-        case EOpConvUintToInt:
-        case EOpConvUintToInt64:
-        case EOpConvUintToUint8:
-        case EOpConvUintToUint16:
-        case EOpConvUintToUint64:
-
-        // uint32_t -> float*
-        case EOpConvUintToFloat16:
-        case EOpConvUintToFloat:
-        case EOpConvUintToDouble:
-
-        // int64 -> (u)int*
-        case EOpConvInt64ToInt8:
-        case EOpConvInt64ToInt16:
-        case EOpConvInt64ToInt:
-        case EOpConvInt64ToUint8:
-        case EOpConvInt64ToUint16:
-        case EOpConvInt64ToUint:
-        case EOpConvInt64ToUint64:
-
-         // int64 -> float*
-        case EOpConvInt64ToFloat16:
-        case EOpConvInt64ToFloat:
-        case EOpConvInt64ToDouble:
-
-        // uint64 -> (u)int*
-        case EOpConvUint64ToInt8:
-        case EOpConvUint64ToInt16:
-        case EOpConvUint64ToInt:
-        case EOpConvUint64ToInt64:
-        case EOpConvUint64ToUint8:
-        case EOpConvUint64ToUint16:
-        case EOpConvUint64ToUint:
-
-        // uint64 -> float*
-        case EOpConvUint64ToFloat16:
-        case EOpConvUint64ToFloat:
-        case EOpConvUint64ToDouble:
-
-        // float16_t -> int*
-        case EOpConvFloat16ToInt8:
-        case EOpConvFloat16ToInt16:
-        case EOpConvFloat16ToInt:
-        case EOpConvFloat16ToInt64:
-
-        // float16_t -> uint*
-        case EOpConvFloat16ToUint8:
-        case EOpConvFloat16ToUint16:
-        case EOpConvFloat16ToUint:
-        case EOpConvFloat16ToUint64:
-
-        // float16_t -> float*
-        case EOpConvFloat16ToFloat:
-        case EOpConvFloat16ToDouble:
-
-        // float32 -> float*
-        case EOpConvFloatToFloat16:
-        case EOpConvFloatToDouble:
-
-        // float32_t -> int*
-        case EOpConvFloatToInt8:
-        case EOpConvFloatToInt16:
-        case EOpConvFloatToInt:
-        case EOpConvFloatToInt64:
-
-        // float32_t -> uint*
-        case EOpConvFloatToUint8:
-        case EOpConvFloatToUint16:
-        case EOpConvFloatToUint:
-        case EOpConvFloatToUint64:
-
-        // double -> float*
-        case EOpConvDoubleToFloat16:
-        case EOpConvDoubleToFloat:
-
-        // double -> int*
-        case EOpConvDoubleToInt8:
-        case EOpConvDoubleToInt16:
-        case EOpConvDoubleToInt:
-        case EOpConvDoubleToInt64:
-
-        // float32_t -> uint*
-        case EOpConvDoubleToUint8:
-        case EOpConvDoubleToUint16:
-        case EOpConvDoubleToUint:
-        case EOpConvDoubleToUint64:
-
-        case EOpRadians:
-        case EOpDegrees:
-        case EOpSin:
-        case EOpCos:
-        case EOpTan:
-        case EOpAsin:
-        case EOpAcos:
-        case EOpAtan:
-        case EOpSinh:
-        case EOpCosh:
-        case EOpTanh:
-        case EOpAsinh:
-        case EOpAcosh:
-        case EOpAtanh:
-
-        case EOpExp:
-        case EOpLog:
-        case EOpExp2:
-        case EOpLog2:
-        case EOpSqrt:
-        case EOpInverseSqrt: out.debug << ")"; break;
-        default: out.debug << "";
+        default: out.debug << ")";
         }
     }
 
@@ -1000,143 +800,143 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             break;
         }
 
-        case EOpConstructFloat: out.debug << "Construct float"; break;
-        case EOpConstructDouble:out.debug << "Construct double"; break;
+        case EOpConstructFloat:
+        case EOpConstructDouble:
 
-        case EOpConstructVec2:  out.debug << "Construct vec2";  break;
-        case EOpConstructVec3:  out.debug << "Construct vec3";  break;
-        case EOpConstructVec4:  out.debug << "Construct vec4";  break;
-        case EOpConstructDVec2: out.debug << "Construct dvec2";  break;
-        case EOpConstructDVec3: out.debug << "Construct dvec3";  break;
-        case EOpConstructDVec4: out.debug << "Construct dvec4";  break;
-        case EOpConstructBool:  out.debug << "Construct bool";  break;
-        case EOpConstructBVec2: out.debug << "Construct bvec2"; break;
-        case EOpConstructBVec3: out.debug << "Construct bvec3"; break;
-        case EOpConstructBVec4: out.debug << "Construct bvec4"; break;
-        case EOpConstructInt8:   out.debug << "Construct int8_t";   break;
-        case EOpConstructI8Vec2: out.debug << "Construct i8vec2"; break;
-        case EOpConstructI8Vec3: out.debug << "Construct i8vec3"; break;
-        case EOpConstructI8Vec4: out.debug << "Construct i8vec4"; break;
-        case EOpConstructInt:   out.debug << "Construct int";   break;
-        case EOpConstructIVec2: out.debug << "Construct ivec2"; break;
-        case EOpConstructIVec3: out.debug << "Construct ivec3"; break;
-        case EOpConstructIVec4: out.debug << "Construct ivec4"; break;
-        case EOpConstructUint8:    out.debug << "Construct uint8_t";    break;
-        case EOpConstructU8Vec2:   out.debug << "Construct u8vec2";   break;
-        case EOpConstructU8Vec3:   out.debug << "Construct u8vec3";   break;
-        case EOpConstructU8Vec4:   out.debug << "Construct u8vec4";   break;
-        case EOpConstructUint:    out.debug << "Construct uint";    break;
-        case EOpConstructUVec2:   out.debug << "Construct uvec2";   break;
-        case EOpConstructUVec3:   out.debug << "Construct uvec3";   break;
-        case EOpConstructUVec4:   out.debug << "Construct uvec4";   break;
-        case EOpConstructInt64:   out.debug << "Construct int64"; break;
-        case EOpConstructI64Vec2: out.debug << "Construct i64vec2"; break;
-        case EOpConstructI64Vec3: out.debug << "Construct i64vec3"; break;
-        case EOpConstructI64Vec4: out.debug << "Construct i64vec4"; break;
-        case EOpConstructUint64:  out.debug << "Construct uint64"; break;
-        case EOpConstructU64Vec2: out.debug << "Construct u64vec2"; break;
-        case EOpConstructU64Vec3: out.debug << "Construct u64vec3"; break;
-        case EOpConstructU64Vec4: out.debug << "Construct u64vec4"; break;
-        case EOpConstructInt16:   out.debug << "Construct int16_t"; break;
-        case EOpConstructI16Vec2: out.debug << "Construct i16vec2"; break;
-        case EOpConstructI16Vec3: out.debug << "Construct i16vec3"; break;
-        case EOpConstructI16Vec4: out.debug << "Construct i16vec4"; break;
-        case EOpConstructUint16:  out.debug << "Construct uint16_t"; break;
-        case EOpConstructU16Vec2: out.debug << "Construct u16vec2"; break;
-        case EOpConstructU16Vec3: out.debug << "Construct u16vec3"; break;
-        case EOpConstructU16Vec4: out.debug << "Construct u16vec4"; break;
-        case EOpConstructMat2x2:  out.debug << "Construct mat2";    break;
-        case EOpConstructMat2x3:  out.debug << "Construct mat2x3";  break;
-        case EOpConstructMat2x4:  out.debug << "Construct mat2x4";  break;
-        case EOpConstructMat3x2:  out.debug << "Construct mat3x2";  break;
-        case EOpConstructMat3x3:  out.debug << "Construct mat3";    break;
-        case EOpConstructMat3x4:  out.debug << "Construct mat3x4";  break;
-        case EOpConstructMat4x2:  out.debug << "Construct mat4x2";  break;
-        case EOpConstructMat4x3:  out.debug << "Construct mat4x3";  break;
-        case EOpConstructMat4x4:  out.debug << "Construct mat4";    break;
-        case EOpConstructDMat2x2: out.debug << "Construct dmat2";   break;
-        case EOpConstructDMat2x3: out.debug << "Construct dmat2x3"; break;
-        case EOpConstructDMat2x4: out.debug << "Construct dmat2x4"; break;
-        case EOpConstructDMat3x2: out.debug << "Construct dmat3x2"; break;
-        case EOpConstructDMat3x3: out.debug << "Construct dmat3";   break;
-        case EOpConstructDMat3x4: out.debug << "Construct dmat3x4"; break;
-        case EOpConstructDMat4x2: out.debug << "Construct dmat4x2"; break;
-        case EOpConstructDMat4x3: out.debug << "Construct dmat4x3"; break;
-        case EOpConstructDMat4x4: out.debug << "Construct dmat4";   break;
-        case EOpConstructIMat2x2: out.debug << "Construct imat2";   break;
-        case EOpConstructIMat2x3: out.debug << "Construct imat2x3"; break;
-        case EOpConstructIMat2x4: out.debug << "Construct imat2x4"; break;
-        case EOpConstructIMat3x2: out.debug << "Construct imat3x2"; break;
-        case EOpConstructIMat3x3: out.debug << "Construct imat3";   break;
-        case EOpConstructIMat3x4: out.debug << "Construct imat3x4"; break;
-        case EOpConstructIMat4x2: out.debug << "Construct imat4x2"; break;
-        case EOpConstructIMat4x3: out.debug << "Construct imat4x3"; break;
-        case EOpConstructIMat4x4: out.debug << "Construct imat4";   break;
-        case EOpConstructUMat2x2: out.debug << "Construct umat2";   break;
-        case EOpConstructUMat2x3: out.debug << "Construct umat2x3"; break;
-        case EOpConstructUMat2x4: out.debug << "Construct umat2x4"; break;
-        case EOpConstructUMat3x2: out.debug << "Construct umat3x2"; break;
-        case EOpConstructUMat3x3: out.debug << "Construct umat3";   break;
-        case EOpConstructUMat3x4: out.debug << "Construct umat3x4"; break;
-        case EOpConstructUMat4x2: out.debug << "Construct umat4x2"; break;
-        case EOpConstructUMat4x3: out.debug << "Construct umat4x3"; break;
-        case EOpConstructUMat4x4: out.debug << "Construct umat4";   break;
-        case EOpConstructBMat2x2: out.debug << "Construct bmat2";   break;
-        case EOpConstructBMat2x3: out.debug << "Construct bmat2x3"; break;
-        case EOpConstructBMat2x4: out.debug << "Construct bmat2x4"; break;
-        case EOpConstructBMat3x2: out.debug << "Construct bmat3x2"; break;
-        case EOpConstructBMat3x3: out.debug << "Construct bmat3";   break;
-        case EOpConstructBMat3x4: out.debug << "Construct bmat3x4"; break;
-        case EOpConstructBMat4x2: out.debug << "Construct bmat4x2"; break;
-        case EOpConstructBMat4x3: out.debug << "Construct bmat4x3"; break;
-        case EOpConstructBMat4x4: out.debug << "Construct bmat4";   break;
-        case EOpConstructFloat16:   out.debug << "Construct float16_t"; break;
-        case EOpConstructF16Vec2:   out.debug << "Construct f16vec2";   break;
-        case EOpConstructF16Vec3:   out.debug << "Construct f16vec3";   break;
-        case EOpConstructF16Vec4:   out.debug << "Construct f16vec4";   break;
-        case EOpConstructF16Mat2x2: out.debug << "Construct f16mat2";   break;
-        case EOpConstructF16Mat2x3: out.debug << "Construct f16mat2x3"; break;
-        case EOpConstructF16Mat2x4: out.debug << "Construct f16mat2x4"; break;
-        case EOpConstructF16Mat3x2: out.debug << "Construct f16mat3x2"; break;
-        case EOpConstructF16Mat3x3: out.debug << "Construct f16mat3";   break;
-        case EOpConstructF16Mat3x4: out.debug << "Construct f16mat3x4"; break;
-        case EOpConstructF16Mat4x2: out.debug << "Construct f16mat4x2"; break;
-        case EOpConstructF16Mat4x3: out.debug << "Construct f16mat4x3"; break;
-        case EOpConstructF16Mat4x4: out.debug << "Construct f16mat4";   break;
-        case EOpConstructStruct:  out.debug << "Construct structure";  break;
+        case EOpConstructVec2:
+        case EOpConstructVec3:
+        case EOpConstructVec4:
+        case EOpConstructDVec2:
+        case EOpConstructDVec3:
+        case EOpConstructDVec4:
+        case EOpConstructBool:
+        case EOpConstructBVec2:
+        case EOpConstructBVec3:
+        case EOpConstructBVec4:
+        case EOpConstructInt8:
+        case EOpConstructI8Vec2:
+        case EOpConstructI8Vec3:
+        case EOpConstructI8Vec4:
+        case EOpConstructInt:
+        case EOpConstructIVec2:
+        case EOpConstructIVec3:
+        case EOpConstructIVec4:
+        case EOpConstructUint8:
+        case EOpConstructU8Vec2:
+        case EOpConstructU8Vec3:
+        case EOpConstructU8Vec4:
+        case EOpConstructUint:
+        case EOpConstructUVec2:
+        case EOpConstructUVec3:
+        case EOpConstructUVec4:
+        case EOpConstructInt64:
+        case EOpConstructI64Vec2:
+        case EOpConstructI64Vec3:
+        case EOpConstructI64Vec4:
+        case EOpConstructUint64:
+        case EOpConstructU64Vec2:
+        case EOpConstructU64Vec3:
+        case EOpConstructU64Vec4:
+        case EOpConstructInt16:
+        case EOpConstructI16Vec2:
+        case EOpConstructI16Vec3:
+        case EOpConstructI16Vec4:
+        case EOpConstructUint16:
+        case EOpConstructU16Vec2:
+        case EOpConstructU16Vec3:
+        case EOpConstructU16Vec4:
+        case EOpConstructMat2x2:
+        case EOpConstructMat2x3:
+        case EOpConstructMat2x4:
+        case EOpConstructMat3x2:
+        case EOpConstructMat3x3:
+        case EOpConstructMat3x4:
+        case EOpConstructMat4x2:
+        case EOpConstructMat4x3:
+        case EOpConstructMat4x4:
+        case EOpConstructDMat2x2:
+        case EOpConstructDMat2x3:
+        case EOpConstructDMat2x4:
+        case EOpConstructDMat3x2:
+        case EOpConstructDMat3x3:
+        case EOpConstructDMat3x4:
+        case EOpConstructDMat4x2:
+        case EOpConstructDMat4x3:
+        case EOpConstructDMat4x4:
+        case EOpConstructIMat2x2:
+        case EOpConstructIMat2x3:
+        case EOpConstructIMat2x4:
+        case EOpConstructIMat3x2:
+        case EOpConstructIMat3x3:
+        case EOpConstructIMat3x4:
+        case EOpConstructIMat4x2:
+        case EOpConstructIMat4x3:
+        case EOpConstructIMat4x4:
+        case EOpConstructUMat2x2:
+        case EOpConstructUMat2x3:
+        case EOpConstructUMat2x4:
+        case EOpConstructUMat3x2:
+        case EOpConstructUMat3x3:
+        case EOpConstructUMat3x4:
+        case EOpConstructUMat4x2:
+        case EOpConstructUMat4x3:
+        case EOpConstructUMat4x4:
+        case EOpConstructBMat2x2:
+        case EOpConstructBMat2x3:
+        case EOpConstructBMat2x4:
+        case EOpConstructBMat3x2:
+        case EOpConstructBMat3x3:
+        case EOpConstructBMat3x4:
+        case EOpConstructBMat4x2:
+        case EOpConstructBMat4x3:
+        case EOpConstructBMat4x4:
+        case EOpConstructFloat16:
+        case EOpConstructF16Vec2:
+        case EOpConstructF16Vec3:
+        case EOpConstructF16Vec4:
+        case EOpConstructF16Mat2x2:
+        case EOpConstructF16Mat2x3:
+        case EOpConstructF16Mat2x4:
+        case EOpConstructF16Mat3x2:
+        case EOpConstructF16Mat3x3:
+        case EOpConstructF16Mat3x4:
+        case EOpConstructF16Mat4x2:
+        case EOpConstructF16Mat4x3:
+        case EOpConstructF16Mat4x4:
+        case EOpConstructStruct: out.debug << node->getTypeString() << "(";  break;
         case EOpConstructTextureSampler: out.debug << "Construct combined texture-sampler"; break;
         case EOpConstructReference:  out.debug << "Construct reference";  break;
         case EOpConstructCooperativeMatrix:  out.debug << "Construct cooperative matrix";  break;
         case EOpConstructAccStruct: out.debug << "Construct acceleration structure"; break;
 
-        case EOpLessThan:         out.debug << "Compare Less Than";             break;
-        case EOpGreaterThan:      out.debug << "Compare Greater Than";          break;
-        case EOpLessThanEqual:    out.debug << "Compare Less Than or Equal";    break;
-        case EOpGreaterThanEqual: out.debug << "Compare Greater Than or Equal"; break;
-        case EOpVectorEqual:      out.debug << "Equal";                         break;
-        case EOpVectorNotEqual:   out.debug << "NotEqual";                      break;
+        case EOpLessThan:         out.debug << "lessThan(";             break;
+        case EOpGreaterThan:      out.debug << "greaterThan(";          break;
+        case EOpLessThanEqual:    out.debug << "LessThanEqual(";    break;
+        case EOpGreaterThanEqual: out.debug << "greaterThanEqual("; break;
+        case EOpVectorEqual:      out.debug << "equal(";                         break;
+        case EOpVectorNotEqual:   out.debug << "notEqual(";                      break;
 
-        case EOpMod:           out.debug << "mod";         break;
-        case EOpModf:          out.debug << "modf";        break;
-        case EOpPow:           out.debug << "pow";         break;
+        case EOpMod:           out.debug << "mod(";         break;
+        case EOpModf:          out.debug << "modf(";        break;
+        case EOpPow:           out.debug << "pow(";         break;
 
-        case EOpAtan:          out.debug << "arc tangent"; break;
+        case EOpAtan:          out.debug << "atan("; break;
 
-        case EOpMin:           out.debug << "min";         break;
-        case EOpMax:           out.debug << "max";         break;
-        case EOpClamp:         out.debug << "clamp";       break;
-        case EOpMix:           out.debug << "mix";         break;
-        case EOpStep:          out.debug << "step";        break;
-        case EOpSmoothStep:    out.debug << "smoothstep";  break;
+        case EOpMin:           out.debug << "min(";         break;
+        case EOpMax:           out.debug << "max(";         break;
+        case EOpClamp:         out.debug << "clamp(";       break;
+        case EOpMix:           out.debug << "mix(";         break;
+        case EOpStep:          out.debug << "step(";        break;
+        case EOpSmoothStep:    out.debug << "smoothstep(";  break;
 
-        case EOpDistance:      out.debug << "distance";                break;
-        case EOpDot:           out.debug << "dot-product";             break;
-        case EOpCross:         out.debug << "cross-product";           break;
-        case EOpFaceForward:   out.debug << "face-forward";            break;
-        case EOpReflect:       out.debug << "reflect";                 break;
-        case EOpRefract:       out.debug << "refract";                 break;
-        case EOpMul:           out.debug << "component-wise multiply"; break;
-        case EOpOuterProduct:  out.debug << "outer product";           break;
+        case EOpDistance:      out.debug << "distance(";                break;
+        case EOpDot:           out.debug << "dot(";             break;
+        case EOpCross:         out.debug << "cross(";           break;
+        case EOpFaceForward:   out.debug << "faceforward(";            break;
+        case EOpReflect:       out.debug << "reflect(";                 break;
+        case EOpRefract:       out.debug << "refract(";                 break;
+        case EOpMul:           out.debug << "matrixCompMult("; break;
+        case EOpOuterProduct:  out.debug << "outerProduct(";           break;
 
         case EOpEmitVertex:    out.debug << "EmitVertex";              break;
         case EOpEndPrimitive:  out.debug << "EndPrimitive";            break;
@@ -1199,24 +999,24 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
         case EOpImageLoadLod:               out.debug << "imageLoadLod";          break;
         case EOpImageStoreLod:              out.debug << "imageStoreLod";         break;
 
-        case EOpTextureQuerySize:           out.debug << "textureSize";           break;
+        case EOpTextureQuerySize:           out.debug << "textureSize(";           break;
         case EOpTextureQueryLod:            out.debug << "textureQueryLod";       break;
         case EOpTextureQueryLevels:         out.debug << "textureQueryLevels";    break;
         case EOpTextureQuerySamples:        out.debug << "textureSamples";        break;
-        case EOpTexture:                    out.debug << "texture";               break;
-        case EOpTextureProj:                out.debug << "textureProj";           break;
-        case EOpTextureLod:                 out.debug << "textureLod";            break;
-        case EOpTextureOffset:              out.debug << "textureOffset";         break;
-        case EOpTextureFetch:               out.debug << "textureFetch";          break;
-        case EOpTextureFetchOffset:         out.debug << "textureFetchOffset";    break;
-        case EOpTextureProjOffset:          out.debug << "textureProjOffset";     break;
-        case EOpTextureLodOffset:           out.debug << "textureLodOffset";      break;
-        case EOpTextureProjLod:             out.debug << "textureProjLod";        break;
-        case EOpTextureProjLodOffset:       out.debug << "textureProjLodOffset";  break;
-        case EOpTextureGrad:                out.debug << "textureGrad";           break;
-        case EOpTextureGradOffset:          out.debug << "textureGradOffset";     break;
-        case EOpTextureProjGrad:            out.debug << "textureProjGrad";       break;
-        case EOpTextureProjGradOffset:      out.debug << "textureProjGradOffset"; break;
+        case EOpTexture:                    out.debug << "texture(";               break;
+        case EOpTextureProj:                out.debug << "textureProj(";           break;
+        case EOpTextureLod:                 out.debug << "textureLod(";            break;
+        case EOpTextureOffset:              out.debug << "textureOffset(";         break;
+        case EOpTextureFetch:               out.debug << "texelFetch(";          break;
+        case EOpTextureFetchOffset:         out.debug << "texelFetchOffset(";    break;
+        case EOpTextureProjOffset:          out.debug << "textureProjOffset(";     break;
+        case EOpTextureLodOffset:           out.debug << "textureLodOffset(";      break;
+        case EOpTextureProjLod:             out.debug << "textureProjLod(";        break;
+        case EOpTextureProjLodOffset:       out.debug << "textureProjLodOffset(";  break;
+        case EOpTextureGrad:                out.debug << "textureGrad(";           break;
+        case EOpTextureGradOffset:          out.debug << "textureGradOffset(";     break;
+        case EOpTextureProjGrad:            out.debug << "textureProjGrad(";       break;
+        case EOpTextureProjGradOffset:      out.debug << "textureProjGradOffset("; break;
         case EOpTextureGather:              out.debug << "textureGather";         break;
         case EOpTextureGatherOffset:        out.debug << "textureGatherOffset";   break;
         case EOpTextureGatherOffsets:       out.debug << "textureGatherOffsets";  break;
@@ -1411,9 +1211,8 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
     }
     else if (visit == EvInVisit) {
         switch (node->getOp()) {
-        case EOpFunctionCall:
-        case EOpParameters: out.debug << ", "; break;
-        default: out.debug << "";
+
+        default: out.debug << ", ";
         }
     }
     else if (visit == EvPostVisit) {
@@ -1431,8 +1230,8 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             out.debug << ") {";
             break;
         }
-        case EOpFunctionCall: out.debug << ")"; break;
-        default: out.debug << "";
+
+        default: out.debug << ")";
         }
     }
     return true;
