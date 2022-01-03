@@ -1717,7 +1717,15 @@ bool TConvertTraverser::visitSwitch(TVisit /* visit */, TIntermSwitch* node)
 //
 void TIntermediate::convert(TInfoSink& infoSink, bool tree)
 {
-    infoSink.debug << "Shader version: " << version << "\n";
+    switch (version) {
+    case 150:
+        infoSink.debug << "#version 300 es\n";
+        break;
+    default:
+        infoSink.debug << "#version 100\n";
+    }
+    infoSink.debug << "precision highp float;\n";
+    infoSink.debug << "precision highp int;\n";
     if (requestedExtensions.size() > 0) {
         for (auto extIt = requestedExtensions.begin(); extIt != requestedExtensions.end(); ++extIt)
             infoSink.debug << "Requested " << *extIt << "\n";
