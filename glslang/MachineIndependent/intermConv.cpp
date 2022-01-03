@@ -226,7 +226,7 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
                 bool reference = node->getLeft()->getType().isReference();
                 const TTypeList *members = reference ? node->getLeft()->getType().getReferentType()->getStruct() : node->getLeft()->getType().getStruct();
                 out.debug << (*members)[node->getRight()->getAsConstantUnion()->getConstArray()[0].getIConst()].type->getFieldName();
-                break;
+                return false;
             }
         case EOpVectorSwizzle: {
             swizzling = true;
