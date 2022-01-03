@@ -1619,15 +1619,15 @@ bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
 bool TConvertTraverser::visitBranch(TVisit /* visit*/, TIntermBranch* node)
 {
     TInfoSink& out = infoSink;
-
+    tryNewLine(node);
     switch (node->getFlowOp()) {
-    case EOpKill:                   out.debug << "Branch: Kill";                  break;
+    case EOpKill:                   out.debug << "discard ";                      break;
     case EOpTerminateInvocation:    out.debug << "Branch: TerminateInvocation";   break;
     case EOpIgnoreIntersectionKHR:  out.debug << "Branch: IgnoreIntersectionKHR"; break;
     case EOpTerminateRayKHR:        out.debug << "Branch: TerminateRayKHR";       break;
-    case EOpBreak:                  out.debug << "Branch: Break";                 break;
-    case EOpContinue:               out.debug << "Branch: Continue";              break;
-    case EOpReturn:                 out.debug << "Branch: Return";                break;
+    case EOpBreak:                  out.debug << "break ";                        break;
+    case EOpContinue:               out.debug << "continue ";                     break;
+    case EOpReturn:                 out.debug << "return ";                       break;
     case EOpCase:                   out.debug << "case: ";                        break;
     case EOpDemote:                 out.debug << "Demote";                        break;
     case EOpDefault:                out.debug << "default: ";                     break;
@@ -1635,12 +1635,8 @@ bool TConvertTraverser::visitBranch(TVisit /* visit*/, TIntermBranch* node)
     }
 
     if (node->getExpression()) {
-        out.debug << " with expression\n";
-        ++depth;
         node->getExpression()->traverse(this);
-        --depth;
-    } else
-        out.debug << "\n";
+    }
 
     return false;
 }
