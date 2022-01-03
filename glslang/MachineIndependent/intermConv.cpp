@@ -1637,41 +1637,55 @@ bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
 {
     TInfoSink& out = infoSink;
 
-    out.debug << "Loop with condition ";
-    if (! node->testFirst())
-        out.debug << "not ";
-    out.debug << "tested first";
+    tryNewLine(node);
+    if (node->testFirst()) {
+        gotoNewLine();
+        out.debug << "for( ; ";
+        if (node->getTest()) {
+            node->getTest()->traverse(this);
+        }
+        out.debug << "; ";
+        if (node->getTerminal()) {
+            node->getTerminal()->traverse(this);
+        }
+        out.debug << ") ";
+        if (node->getBody()) {
+            out.debug << "{";
 
-    if (node->getUnroll())
-        out.debug << ": Unroll";
-    if (node->getDontUnroll())
-        out.debug << ": DontUnroll";
-    if (node->getLoopDependency()) {
-        out.debug << ": Dependency ";
-        out.debug << node->getLoopDependency();
+            level++;
+            sequenceSeperator.push(";"); sequenceEnd.push("");
+            node->getBody()->traverse(this);
+            if (!skipped) {
+                out.debug << ";";
+            }
+            level--;
+            gotoNewLine();
+            out.debug << "}";
+            sequenceSeperator.pop(); sequenceEnd.pop();
+        }
+        else {
+            out.debug << ";";
+        }
     }
-    out.debug << "\n";
+    else {
+        out.debug << "do {";
 
-    ++depth;
-
-    if (node->getTest()) {
-        out.debug << "Loop Condition\n";
-        node->getTest()->traverse(this);
-    } else
-        out.debug << "No loop condition\n";
-
-    if (node->getBody()) {
-        out.debug << "Loop Body\n";
+        level++;
+        sequenceSeperator.push(";"); sequenceEnd.push("");
         node->getBody()->traverse(this);
-    } else
-        out.debug << "No loop body\n";
+        if (!skipped) {
+            out.debug << ";";
+        }
+        level--;
+        gotoNewLine();
+        out.debug << "}";
+        sequenceSeperator.pop(); sequenceEnd.pop();
 
-    if (node->getTerminal()) {
-        out.debug << "Loop Terminal Expression\n";
-        node->getTerminal()->traverse(this);
+        out.debug << " while (";
+        node->getTest()->traverse(this);
+        out.debug << ");";
     }
-
-    --depth;
+    skipped = true;
 
     return false;
 }
