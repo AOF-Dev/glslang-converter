@@ -2377,6 +2377,69 @@ public:
             return getBasicString();
     }
 
+    TString getTypeString() const
+    {
+        TString typeString;
+
+        const auto appendStr  = [&](const char* s)  { typeString.append(s); };
+        const auto appendUint = [&](unsigned int u) { typeString.append(std::to_string(u).c_str()); };
+        const auto appendInt  = [&](int i)          { typeString.append(std::to_string(i).c_str()); };
+        bool isBasic = true;
+        if (isVector()) {
+            if (getBasicTypeString() == "int") {
+                appendStr("ivec");
+            }
+            else if (getBasicTypeString() == "bool") {
+                appendStr("bvec");
+            }
+            else {
+                appendStr("vec");
+            }
+            appendInt(vectorSize);
+            isBasic = false;
+        }
+        else if (isMatrix()) {
+            appendStr("mat");
+            if (matrixCols == matrixRows) {
+                appendInt(matrixCols);
+            }
+            else {
+                appendInt(matrixCols);
+                appendStr("x");
+                appendInt(matrixRows);
+            }
+            isBasic = false;
+        }
+        if (isArray()) {
+            if (isBasic) {
+                typeString.append(getBasicTypeString());
+            }
+            for (int i = 0; i < (int)arraySizes->getNumDims(); ++i) {
+                int size = arraySizes->getDimSize(i);
+                appendStr("[");
+                if (size == UnsizedArraySize && i == 0 && arraySizes->isVariablyIndexed())
+                    appendStr("]");
+                else {
+                    if (size == UnsizedArraySize) {
+                        if (i == 0) {
+                            appendInt(arraySizes->getImplicitSize());
+                        }
+                    } else {
+                        appendInt(arraySizes->getDimSize(i));
+                    }
+                    appendStr("]");
+                }
+            }
+            isBasic = false;
+        }
+        if (isBasic) {
+            return getBasicTypeString();
+        }
+        else {
+            return typeString;
+        }
+    }
+
     const char* getStorageQualifierString() const { return GetStorageQualifierString(qualifier.storage); }
     const char* getBuiltInVariableString() const { return GetBuiltInVariableString(qualifier.builtIn); }
     const char* getPrecisionQualifierString() const { return GetPrecisionQualifierString(qualifier.precision); }

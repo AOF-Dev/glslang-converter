@@ -1156,6 +1156,7 @@ public:
     bool isAtomic() const { return type.isAtomic(); }
     bool isReference() const { return type.isReference(); }
     TString getCompleteString() const { return type.getCompleteString(); }
+    TString getTypeString() const { return type.getTypeString(); }
 
 protected:
     TIntermTyped& operator=(const TIntermTyped&);
