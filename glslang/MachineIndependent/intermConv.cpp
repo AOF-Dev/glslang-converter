@@ -165,21 +165,21 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
     }
     else if (visit == EvInVisit) {
         switch (node->getOp()) {
-        case EOpAssign:                   out.debug << "move second child to first child";           break;
-        case EOpAddAssign:                out.debug << "add second child into first child";          break;
-        case EOpSubAssign:                out.debug << "subtract second child into first child";     break;
-        case EOpMulAssign:                out.debug << "multiply second child into first child";     break;
-        case EOpVectorTimesMatrixAssign:  out.debug << "matrix mult second child into first child";  break;
-        case EOpVectorTimesScalarAssign:  out.debug << "vector scale second child into first child"; break;
-        case EOpMatrixTimesScalarAssign:  out.debug << "matrix scale second child into first child"; break;
-        case EOpMatrixTimesMatrixAssign:  out.debug << "matrix mult second child into first child";  break;
-        case EOpDivAssign:                out.debug << "divide second child into first child";       break;
-        case EOpModAssign:                out.debug << "mod second child into first child";          break;
-        case EOpAndAssign:                out.debug << "and second child into first child";          break;
-        case EOpInclusiveOrAssign:        out.debug << "or second child into first child";           break;
-        case EOpExclusiveOrAssign:        out.debug << "exclusive or second child into first child"; break;
-        case EOpLeftShiftAssign:          out.debug << "left shift second child into first child";   break;
-        case EOpRightShiftAssign:         out.debug << "right shift second child into first child";  break;
+        case EOpAssign:                   out.debug << " = ";   break;
+        case EOpAddAssign:                out.debug << " += ";  break;
+        case EOpSubAssign:                out.debug << " -= ";  break;
+        case EOpMulAssign:                out.debug << " *= ";  break;
+        case EOpVectorTimesMatrixAssign:  out.debug << " *= ";  break;
+        case EOpVectorTimesScalarAssign:  out.debug << " *= ";  break;
+        case EOpMatrixTimesScalarAssign:  out.debug << " *= ";  break;
+        case EOpMatrixTimesMatrixAssign:  out.debug << " *= ";  break;
+        case EOpDivAssign:                out.debug << " /= ";  break;
+        case EOpModAssign:                out.debug << " %= ";  break;
+        case EOpAndAssign:                out.debug << " &= ";  break;
+        case EOpInclusiveOrAssign:        out.debug << " |= ";  break;
+        case EOpExclusiveOrAssign:        out.debug << " ^= ";  break;
+        case EOpLeftShiftAssign:          out.debug << " <<= "; break;
+        case EOpRightShiftAssign:         out.debug << " >>= "; break;
 
         case EOpIndexDirect:   out.debug << "direct index";   break;
         case EOpIndexIndirect: out.debug << "indirect index"; break;
