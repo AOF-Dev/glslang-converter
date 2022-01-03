@@ -464,12 +464,12 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpAcosh:          out.debug << "acosh(";   break;
         case EOpAtanh:          out.debug << "atanh(";   break;
 
-        case EOpExp:            out.debug << "exp";                  break;
-        case EOpLog:            out.debug << "log";                  break;
-        case EOpExp2:           out.debug << "exp2";                 break;
-        case EOpLog2:           out.debug << "log2";                 break;
-        case EOpSqrt:           out.debug << "sqrt";                 break;
-        case EOpInverseSqrt:    out.debug << "inverse sqrt";         break;
+        case EOpExp:            out.debug << "exp(";         break;
+        case EOpLog:            out.debug << "log(";         break;
+        case EOpExp2:           out.debug << "exp2(";        break;
+        case EOpLog2:           out.debug << "log2(";        break;
+        case EOpSqrt:           out.debug << "sqrt(";        break;
+        case EOpInverseSqrt:    out.debug << "inversesqrt("; break;
 
         case EOpAbs:            out.debug << "Absolute value";       break;
         case EOpSign:           out.debug << "Sign";                 break;
@@ -912,7 +912,14 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpTanh:
         case EOpAsinh:
         case EOpAcosh:
-        case EOpAtanh: out.debug << ")"; break;
+        case EOpAtanh:
+
+        case EOpExp:
+        case EOpLog:
+        case EOpExp2:
+        case EOpLog2:
+        case EOpSqrt:
+        case EOpInverseSqrt: out.debug << ")"; break;
         }
     }
 
