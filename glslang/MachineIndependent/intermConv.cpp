@@ -193,16 +193,16 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         case EOpVectorSwizzle: out.debug << "vector swizzle"; break;
         case EOpMatrixSwizzle: out.debug << "matrix swizzle"; break;
 
-        case EOpAdd:    out.debug << "add";                     break;
-        case EOpSub:    out.debug << "subtract";                break;
-        case EOpMul:    out.debug << "component-wise multiply"; break;
-        case EOpDiv:    out.debug << "divide";                  break;
-        case EOpMod:    out.debug << "mod";                     break;
-        case EOpRightShift:  out.debug << "right-shift";  break;
-        case EOpLeftShift:   out.debug << "left-shift";   break;
-        case EOpAnd:         out.debug << "bitwise and";  break;
-        case EOpInclusiveOr: out.debug << "inclusive-or"; break;
-        case EOpExclusiveOr: out.debug << "exclusive-or"; break;
+        case EOpAdd:    out.debug << " + "; break;
+        case EOpSub:    out.debug << " - "; break;
+        case EOpMul:    out.debug << " * "; break;
+        case EOpDiv:    out.debug << " / "; break;
+        case EOpMod:    out.debug << " % "; break;
+        case EOpRightShift:  out.debug << " >> "; break;
+        case EOpLeftShift:   out.debug << " << "; break;
+        case EOpAnd:         out.debug << " & ";  break;
+        case EOpInclusiveOr: out.debug << " | ";  break;
+        case EOpExclusiveOr: out.debug << " ^ ";  break;
         case EOpEqual:            out.debug << "Compare Equal";                 break;
         case EOpNotEqual:         out.debug << "Compare Not Equal";             break;
         case EOpLessThan:         out.debug << "Compare Less Than";             break;
@@ -212,15 +212,15 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         case EOpVectorEqual:      out.debug << "Equal";                         break;
         case EOpVectorNotEqual:   out.debug << "NotEqual";                      break;
 
-        case EOpVectorTimesScalar: out.debug << "vector-scale";          break;
-        case EOpVectorTimesMatrix: out.debug << "vector-times-matrix";   break;
-        case EOpMatrixTimesVector: out.debug << "matrix-times-vector";   break;
-        case EOpMatrixTimesScalar: out.debug << "matrix-scale";          break;
-        case EOpMatrixTimesMatrix: out.debug << "matrix-multiply";       break;
+        case EOpVectorTimesScalar: out.debug << " * "; break;
+        case EOpVectorTimesMatrix: out.debug << " * "; break;
+        case EOpMatrixTimesVector: out.debug << " * "; break;
+        case EOpMatrixTimesScalar: out.debug << " * "; break;
+        case EOpMatrixTimesMatrix: out.debug << " * "; break;
 
-        case EOpLogicalOr:  out.debug << "logical-or";   break;
-        case EOpLogicalXor: out.debug << "logical-xor"; break;
-        case EOpLogicalAnd: out.debug << "logical-and"; break;
+        case EOpLogicalOr:  out.debug << " || "; break;
+        case EOpLogicalXor: out.debug << " ^^ "; break;
+        case EOpLogicalAnd: out.debug << " && "; break;
 
         case EOpAbsDifference:          out.debug << "absoluteDifference";    break;
         case EOpAddSaturate:            out.debug << "addSaturate";           break;
