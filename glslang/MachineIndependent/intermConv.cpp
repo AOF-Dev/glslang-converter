@@ -1531,115 +1531,143 @@ static void OutputDouble(TInfoSink& out, double value, TConvertTraverser::EExtra
 }
 
 static void OutputConstantUnion(TInfoSink& out, const TIntermTyped* node, const TConstUnionArray& constUnion,
-    TConvertTraverser::EExtraOutput extra, int depth)
+    TConvertTraverser::EExtraOutput extra, bool swizzling)
 {
     int size = node->getType().computeNumComponents();
 
-    for (int i = 0; i < size; i++) {
-        switch (constUnion[i].getType()) {
-        case EbtBool:
-            if (constUnion[i].getBConst())
-                out.debug << "true";
-            else
-                out.debug << "false";
-
-            out.debug << " (" << "const bool" << ")";
-
-            out.debug << "\n";
-            break;
-        case EbtFloat:
-        case EbtDouble:
-        case EbtFloat16:
-            OutputDouble(out, constUnion[i].getDConst(), extra);
-            out.debug << "\n";
-            break;
-        case EbtInt8:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%d (%s)", constUnion[i].getI8Const(), "const int8_t");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtUint8:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%u (%s)", constUnion[i].getU8Const(), "const uint8_t");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtInt16:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%d (%s)", constUnion[i].getI16Const(), "const int16_t");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtUint16:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%u (%s)", constUnion[i].getU16Const(), "const uint16_t");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtInt:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%d (%s)", constUnion[i].getIConst(), "const int");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtUint:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%u (%s)", constUnion[i].getUConst(), "const uint");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtInt64:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%lld (%s)", constUnion[i].getI64Const(), "const int64_t");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtUint64:
-            {
-                const int maxSize = 300;
-                char buf[maxSize];
-                snprintf(buf, maxSize, "%llu (%s)", constUnion[i].getU64Const(), "const uint64_t");
-
-                out.debug << buf << "\n";
-            }
-            break;
-        case EbtString:
-            out.debug << "\"" << constUnion[i].getSConst()->c_str() << "\"\n";
-            break;
-        default:
-            out.info.message(EPrefixInternalError, "Unknown constant", node->getLoc());
-            break;
+    int arraySize = 0;
+    int elementSize = 0;
+    if (node->getType().isArray()) {
+        arraySize = node->getType().getOuterArraySize();
+        elementSize = size / arraySize;
+        out.debug << node->getTypeString() << "(";
+    }
+    else {
+        arraySize = 1;
+        elementSize = size;
+    }
+    bool arrayNeedComma = false;
+    for (int j = 0; j < arraySize; j++) {
+        if (arrayNeedComma) out.debug << ", ";
+        if (elementSize > 1) {
+            out.debug << node->getType().getArrayElementTypeString() << "(";
         }
+        bool elementNeedComma = false;
+        for (int i = 0; i < elementSize; i++) {
+            if (elementNeedComma) out.debug << ", ";
+            switch (constUnion[i].getType()) {
+            case EbtBool:
+                if (constUnion[i].getBConst())
+                    out.debug << "true";
+                else
+                    out.debug << "false";
+
+                break;
+            case EbtFloat:
+            case EbtDouble:
+            case EbtFloat16:
+                OutputDouble(out, constUnion[i].getDConst(), extra);
+                break;
+            case EbtInt8:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    snprintf(buf, maxSize, "%d", constUnion[i].getI8Const());
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtUint8:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    snprintf(buf, maxSize, "%u", constUnion[i].getU8Const());
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtInt16:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    snprintf(buf, maxSize, "%d", constUnion[i].getI16Const());
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtUint16:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    snprintf(buf, maxSize, "%u", constUnion[i].getU16Const());
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtInt:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    char names[4] = {'x', 'y', 'z', 'w'};
+                    if (swizzling && constUnion[i].getIConst() < 4) {
+                        snprintf(buf, maxSize, "%c", names[constUnion[i].getIConst()]);
+                    }
+                    else {
+                        snprintf(buf, maxSize, "%d", constUnion[i].getIConst());
+                    }
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtUint:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    snprintf(buf, maxSize, "%u", constUnion[i].getUConst());
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtInt64:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    snprintf(buf, maxSize, "%lld", constUnion[i].getI64Const());
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtUint64:
+                {
+                    const int maxSize = 300;
+                    char buf[maxSize];
+                    snprintf(buf, maxSize, "%llu", constUnion[i].getU64Const());
+
+                    out.debug << buf;
+                }
+                break;
+            case EbtString:
+                out.debug << "\"" << constUnion[i].getSConst()->c_str() << "\"";
+                break;
+            default:
+                out.info.message(EPrefixInternalError, "Unknown constant", node->getLoc());
+                break;
+            }
+            elementNeedComma = true;
+        }
+        if (elementSize > 1) {
+            out.debug << ")";
+        }
+        arrayNeedComma = true;
+    }
+    if (node->getType().isArray()) {
+        out.debug << ")";
     }
 }
 
 void TConvertTraverser::visitConstantUnion(TIntermConstantUnion* node)
 {
-    infoSink.debug << "Constant:\n";
-
-    OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, depth + 1);
+    OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, swizzling);
 }
 
 void TConvertTraverser::visitSymbol(TIntermSymbol* node)
@@ -1694,7 +1722,7 @@ void TConvertTraverser::visitSymbol(TIntermSymbol* node)
     }
 
     if (! node->getConstArray().empty())
-        OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, depth + 1);
+        OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, swizzling);
     else if (node->getConstSubtree()) {
         incrementDepth(node);
         node->getConstSubtree()->traverse(this);
