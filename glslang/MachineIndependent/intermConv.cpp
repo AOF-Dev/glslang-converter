@@ -101,7 +101,7 @@ class TConvertTraverser : public TIntermTraverser {
 public:
     TConvertTraverser(TInfoSink& i) : TIntermTraverser(true, true, true, false),
         infoSink(i), extraOutput(NoExtraOutput), lastLine(0), lastFile(0), level(0),
-        declaringSymbol(0), skipped(true) {
+        declaringSymbol(0), skipped(false) {
         sequenceSeperator.push("");
         sequenceEnd.push("");
     }
