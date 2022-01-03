@@ -1157,6 +1157,7 @@ public:
     bool isReference() const { return type.isReference(); }
     TString getCompleteString() const { return type.getCompleteString(); }
     TString getTypeString() const { return type.getTypeString(); }
+    TString getStorageQualifierString() const { return type.getStorageQualifierString(); }
 
 protected:
     TIntermTyped& operator=(const TIntermTyped&);
