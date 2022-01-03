@@ -766,7 +766,12 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
     if (visit == EvPreVisit) {
         tryNewLine(node);
         switch (node->getOp()) {
-        case EOpSequence:      out.debug << "Sequence\n";       return true;
+        case EOpSequence: {
+            const char* sep = sequenceSeperator.top();
+            sequenceSeperator.push(sep);
+            sequenceEnd.push("");
+            break;
+        }
         case EOpLinkerObjects: out.debug << "Linker Objects\n"; return true;
         case EOpComma:         out.debug << "Comma";            break;
         case EOpFunction: {
@@ -1211,12 +1216,32 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
     }
     else if (visit == EvInVisit) {
         switch (node->getOp()) {
-
+        case EOpSequence: {
+            if (!skipped) {
+                out.debug << sequenceSeperator.top();
+            }
+            else {
+                skipped = false;
+            }
+            break;
+        }
+        case EOpFunction: break;
         default: out.debug << ", ";
         }
     }
     else if (visit == EvPostVisit) {
         switch (node->getOp()) {
+        case EOpSequence: {
+            sequenceSeperator.pop();
+            sequenceEnd.pop();
+            if (!skipped) {
+                out.debug << sequenceEnd.top();
+            }
+            else {
+                skipped = false;
+            }
+            break;
+        }
         case EOpFunction: {
             level--;
             gotoNewLine();
