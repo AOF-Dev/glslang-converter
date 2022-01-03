@@ -97,7 +97,8 @@ namespace glslang {
 //
 class TConvertTraverser : public TIntermTraverser {
 public:
-    TConvertTraverser(TInfoSink& i) : infoSink(i), extraOutput(NoExtraOutput) { }
+    TConvertTraverser(TInfoSink& i) : TIntermTraverser(true, true, true, false),
+        infoSink(i), extraOutput(NoExtraOutput) { }
 
     enum EExtraOutput {
         NoExtraOutput,
