@@ -1311,9 +1311,6 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
                     out.debug << sequenceEnd.top();
                 }
             }
-            else {
-                skipped = false;
-            }
             break;
         }
         case EOpFunction: {
