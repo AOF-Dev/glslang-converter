@@ -776,7 +776,7 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpSpirvInst: out.debug << "spirv_instruction"; break;
 #endif
 
-        default: out.debug.message(EPrefixError, "Bad unary op");
+        default: ;
         }
     }
     else if (visit == EvPostVisit) {
