@@ -1624,8 +1624,10 @@ void TConvertTraverser::visitSymbol(TIntermSymbol* node)
         }
     }
 
-    if (! node->getConstArray().empty())
+    if (! node->getConstArray().empty()) {
+        infoSink.debug << " = ";
         OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, swizzling);
+    }
     else if (node->getConstSubtree()) {
         incrementDepth(node);
         node->getConstSubtree()->traverse(this);
