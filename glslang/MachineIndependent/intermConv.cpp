@@ -203,14 +203,14 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         case EOpAnd:         out.debug << " & ";  break;
         case EOpInclusiveOr: out.debug << " | ";  break;
         case EOpExclusiveOr: out.debug << " ^ ";  break;
-        case EOpEqual:            out.debug << "Compare Equal";                 break;
-        case EOpNotEqual:         out.debug << "Compare Not Equal";             break;
-        case EOpLessThan:         out.debug << "Compare Less Than";             break;
-        case EOpGreaterThan:      out.debug << "Compare Greater Than";          break;
-        case EOpLessThanEqual:    out.debug << "Compare Less Than or Equal";    break;
-        case EOpGreaterThanEqual: out.debug << "Compare Greater Than or Equal"; break;
-        case EOpVectorEqual:      out.debug << "Equal";                         break;
-        case EOpVectorNotEqual:   out.debug << "NotEqual";                      break;
+        case EOpEqual:            out.debug << " == "; break;
+        case EOpNotEqual:         out.debug << " != "; break;
+        case EOpLessThan:         out.debug << " < ";  break;
+        case EOpGreaterThan:      out.debug << " > ";  break;
+        case EOpLessThanEqual:    out.debug << " <= "; break;
+        case EOpGreaterThanEqual: out.debug << " >= "; break;
+        case EOpVectorEqual:      out.debug << " == "; break;
+        case EOpVectorNotEqual:   out.debug << " != "; break;
 
         case EOpVectorTimesScalar: out.debug << " * "; break;
         case EOpVectorTimesMatrix: out.debug << " * "; break;
