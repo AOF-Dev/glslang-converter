@@ -1328,34 +1328,51 @@ bool TConvertTraverser::visitSelection(TVisit /* visit */, TIntermSelection* nod
 {
     TInfoSink& out = infoSink;
 
-    out.debug << "Test condition and select";
-    out.debug << " (" << node->getCompleteString() << ")";
-
-    if (node->getShortCircuit() == false)
-        out.debug << ": no shortcircuit";
-    if (node->getFlatten())
-        out.debug << ": Flatten";
-    if (node->getDontFlatten())
-        out.debug << ": DontFlatten";
-    out.debug << "\n";
-
-    ++depth;
-
-    out.debug << "Condition\n";
-    node->getCondition()->traverse(this);
-
-    if (node->getTrueBlock()) {
-        out.debug << "true case\n";
+    if (node->getType().getBasicType() != EbtVoid) {
+        tryNewLine(node);
+        node->getCondition()->traverse(this);
+        out.debug << " ? ";
         node->getTrueBlock()->traverse(this);
-    } else
-        out.debug << "true case is null\n";
-
-    if (node->getFalseBlock()) {
-        out.debug << "false case\n";
+        out.debug << " : ";
         node->getFalseBlock()->traverse(this);
     }
+    else {
+        tryNewLine(node);
+        out.debug << "if (";
+        node->getCondition()->traverse(this);
+        out.debug << ") {";
 
-    --depth;
+        level++;
+        sequenceSeperator.push(";"); sequenceEnd.push("");
+        if (node->getTrueBlock()) {
+            node->getTrueBlock()->traverse(this);
+            if (!skipped) {
+                out.debug << ";";
+            }
+        }
+        level--;
+        gotoNewLine();
+        out.debug << "}";
+        sequenceSeperator.pop(); sequenceEnd.pop();
+
+        gotoNewLine();
+        out.debug << "else {";
+
+        level++;
+        sequenceSeperator.push(";"); sequenceEnd.push("");
+        if (node->getFalseBlock()) {
+            node->getFalseBlock()->traverse(this);
+            if (!skipped) {
+                out.debug << ";";
+            }
+        }
+        level--;
+        gotoNewLine();
+        out.debug << "}";
+        sequenceSeperator.pop(); sequenceEnd.pop();
+
+        skipped = true;
+    }
 
     return false;
 }
