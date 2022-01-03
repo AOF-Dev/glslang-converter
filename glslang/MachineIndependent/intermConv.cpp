@@ -98,7 +98,7 @@ namespace glslang {
 class TConvertTraverser : public TIntermTraverser {
 public:
     TConvertTraverser(TInfoSink& i) : TIntermTraverser(true, true, true, false),
-        infoSink(i), extraOutput(NoExtraOutput) { }
+        infoSink(i), extraOutput(NoExtraOutput), lastLine(0), lastFile(0), level(0) { }
 
     enum EExtraOutput {
         NoExtraOutput,
@@ -117,30 +117,35 @@ public:
     virtual bool visitSwitch(TVisit, TIntermSwitch* node);
 
     TInfoSink& infoSink;
+    int lastLine;
+    int lastFile;
+    int level;
 protected:
     TConvertTraverser(TConvertTraverser&);
     TConvertTraverser& operator=(TConvertTraverser&);
 
     EExtraOutput extraOutput;
+private:
+    void tryNewLine(const TIntermNode* node) {
+        if (lastFile != node->getLoc().string || node->getLoc().line == 0 || lastLine < node->getLoc().line) {
+            infoSink.debug << "\n";
+            if (node->getLoc().line != 0 && (lastFile != node->getLoc().string || lastLine + 1 != node->getLoc().line)) {
+                infoSink.debug << "#line " << node->getLoc().line << " " << node->getLoc().string << "\n";
+            }
+            for (int i = 0; i < level; ++i) {
+                infoSink.debug << "    ";
+            }
+            lastLine = node->getLoc().line;
+            lastFile = node->getLoc().string;
+        }
+    }
+    void gotoNewLine() {
+        infoSink.debug << "\n";
+        for (int i = 0; i < level; ++i) {
+            infoSink.debug << "    ";
+        }
+    }
 };
-
-//
-// Helper functions for printing, not part of traversing.
-//
-
-static void OutputTreeText(TInfoSink& infoSink, const TIntermNode* node, const int depth)
-{
-    int i;
-
-    infoSink.debug << node->getLoc().string << ":";
-    if (node->getLoc().line)
-        infoSink.debug << node->getLoc().line;
-    else
-        infoSink.debug << "? ";
-
-    for (i = 0; i < depth; ++i)
-        infoSink.debug << "  ";
-}
 
 //
 // The rest of the file are the traversal functions.  The last one
@@ -154,8 +159,6 @@ static void OutputTreeText(TInfoSink& infoSink, const TIntermNode* node, const i
 bool TConvertTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
 {
     TInfoSink& out = infoSink;
-
-    OutputTreeText(out, node, depth);
 
     switch (node->getOp()) {
     case EOpAssign:                   out.debug << "move second child to first child";           break;
@@ -235,8 +238,6 @@ bool TConvertTraverser::visitBinary(TVisit /* visit */, TIntermBinary* node)
 bool TConvertTraverser::visitUnary(TVisit /* visit */, TIntermUnary* node)
 {
     TInfoSink& out = infoSink;
-
-    OutputTreeText(out, node, depth);
 
     switch (node->getOp()) {
     case EOpNegative:       out.debug << "Negate value";         break;
@@ -720,8 +721,6 @@ bool TConvertTraverser::visitAggregate(TVisit /* visit */, TIntermAggregate* nod
         return true;
     }
 
-    OutputTreeText(out, node, depth);
-
     switch (node->getOp()) {
     case EOpSequence:      out.debug << "Sequence\n";       return true;
     case EOpLinkerObjects: out.debug << "Linker Objects\n"; return true;
@@ -1151,8 +1150,6 @@ bool TConvertTraverser::visitSelection(TVisit /* visit */, TIntermSelection* nod
 {
     TInfoSink& out = infoSink;
 
-    OutputTreeText(out, node, depth);
-
     out.debug << "Test condition and select";
     out.debug << " (" << node->getCompleteString() << ")";
 
@@ -1166,11 +1163,9 @@ bool TConvertTraverser::visitSelection(TVisit /* visit */, TIntermSelection* nod
 
     ++depth;
 
-    OutputTreeText(out, node, depth);
     out.debug << "Condition\n";
     node->getCondition()->traverse(this);
 
-    OutputTreeText(out, node, depth);
     if (node->getTrueBlock()) {
         out.debug << "true case\n";
         node->getTrueBlock()->traverse(this);
@@ -1178,7 +1173,6 @@ bool TConvertTraverser::visitSelection(TVisit /* visit */, TIntermSelection* nod
         out.debug << "true case is null\n";
 
     if (node->getFalseBlock()) {
-        OutputTreeText(out, node, depth);
         out.debug << "false case\n";
         node->getFalseBlock()->traverse(this);
     }
@@ -1250,7 +1244,6 @@ static void OutputConstantUnion(TInfoSink& out, const TIntermTyped* node, const 
     int size = node->getType().computeNumComponents();
 
     for (int i = 0; i < size; i++) {
-        OutputTreeText(out, node, depth);
         switch (constUnion[i].getType()) {
         case EbtBool:
             if (constUnion[i].getBConst())
@@ -1352,7 +1345,6 @@ static void OutputConstantUnion(TInfoSink& out, const TIntermTyped* node, const 
 
 void TConvertTraverser::visitConstantUnion(TIntermConstantUnion* node)
 {
-    OutputTreeText(infoSink, node, depth);
     infoSink.debug << "Constant:\n";
 
     OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, depth + 1);
@@ -1360,7 +1352,6 @@ void TConvertTraverser::visitConstantUnion(TIntermConstantUnion* node)
 
 void TConvertTraverser::visitSymbol(TIntermSymbol* node)
 {
-    OutputTreeText(infoSink, node, depth);
 
     infoSink.debug << "'" << node->getName() << "' (" << node->getCompleteString() << ")\n";
 
@@ -1376,8 +1367,6 @@ void TConvertTraverser::visitSymbol(TIntermSymbol* node)
 bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
 {
     TInfoSink& out = infoSink;
-
-    OutputTreeText(out, node, depth);
 
     out.debug << "Loop with condition ";
     if (! node->testFirst())
@@ -1396,14 +1385,12 @@ bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
 
     ++depth;
 
-    OutputTreeText(infoSink, node, depth);
     if (node->getTest()) {
         out.debug << "Loop Condition\n";
         node->getTest()->traverse(this);
     } else
         out.debug << "No loop condition\n";
 
-    OutputTreeText(infoSink, node, depth);
     if (node->getBody()) {
         out.debug << "Loop Body\n";
         node->getBody()->traverse(this);
@@ -1411,7 +1398,6 @@ bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
         out.debug << "No loop body\n";
 
     if (node->getTerminal()) {
-        OutputTreeText(infoSink, node, depth);
         out.debug << "Loop Terminal Expression\n";
         node->getTerminal()->traverse(this);
     }
@@ -1424,8 +1410,6 @@ bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
 bool TConvertTraverser::visitBranch(TVisit /* visit*/, TIntermBranch* node)
 {
     TInfoSink& out = infoSink;
-
-    OutputTreeText(out, node, depth);
 
     switch (node->getFlowOp()) {
     case EOpKill:                   out.debug << "Branch: Kill";                  break;
@@ -1456,7 +1440,6 @@ bool TConvertTraverser::visitSwitch(TVisit /* visit */, TIntermSwitch* node)
 {
     TInfoSink& out = infoSink;
 
-    OutputTreeText(out, node, depth);
     out.debug << "switch";
 
     if (node->getFlatten())
@@ -1465,13 +1448,11 @@ bool TConvertTraverser::visitSwitch(TVisit /* visit */, TIntermSwitch* node)
         out.debug << ": DontFlatten";
     out.debug << "\n";
 
-    OutputTreeText(out, node, depth);
     out.debug << "condition\n";
     ++depth;
     node->getCondition()->traverse(this);
 
     --depth;
-    OutputTreeText(out, node, depth);
     out.debug << "body\n";
     ++depth;
     node->getBody()->traverse(this);
