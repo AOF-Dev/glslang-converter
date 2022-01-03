@@ -193,7 +193,7 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         case EOpLogicalOr:
         case EOpLogicalXor:
         case EOpLogicalAnd: out.debug << "("; break;
-        default: out.debug << "";
+        default: ;
         }
     }
     else if (visit == EvInVisit) {
@@ -274,7 +274,7 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         case EOpAverageRounded:         out.debug << "averageRounded";        break;
         case EOpMul32x16:               out.debug << "multiply32x16";         break;
 
-        default: out.debug << "<unknown op>";
+        default: ;
         }
     }
     else if (visit == EvPostVisit) {
@@ -303,7 +303,7 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         case EOpLogicalOr:
         case EOpLogicalXor:
         case EOpLogicalAnd: out.debug << ")"; break;
-        default: out.debug << "";
+        default: ;
         }
     }
 
@@ -1260,7 +1260,7 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
         case EOpSpirvInst: out.debug << "spirv_instruction"; break;
 #endif
 
-        default: out.debug.message(EPrefixError, "Bad aggregation op");
+        default: ;
         }
     }
     else if (visit == EvInVisit) {
@@ -1272,7 +1272,7 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             else {
                 skipped = false;
             }
-            return true;
+            break;
         }
         case EOpSequence: {
             if (!skipped) {
@@ -1297,7 +1297,7 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             else {
                 skipped = false;
             }
-            return true;
+            break;
         }
         case EOpSequence: {
             sequenceSeperator.pop();
@@ -1362,6 +1362,9 @@ bool TConvertTraverser::visitSelection(TVisit /* visit */, TIntermSelection* nod
             if (!skipped) {
                 out.debug << ";";
             }
+            else {
+                skipped = false;
+            }
         }
         level--;
         gotoNewLine();
@@ -1377,6 +1380,9 @@ bool TConvertTraverser::visitSelection(TVisit /* visit */, TIntermSelection* nod
             node->getFalseBlock()->traverse(this);
             if (!skipped) {
                 out.debug << ";";
+            }
+            else {
+                skipped = false;
             }
         }
         level--;
@@ -1673,6 +1679,9 @@ bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
             if (!skipped) {
                 out.debug << ";";
             }
+            else {
+                skipped = false;
+            }
             level--;
             gotoNewLine();
             out.debug << "}";
@@ -1690,6 +1699,9 @@ bool TConvertTraverser::visitLoop(TVisit /* visit */, TIntermLoop* node)
         node->getBody()->traverse(this);
         if (!skipped) {
             out.debug << ";";
+        }
+        else {
+            skipped = false;
         }
         level--;
         gotoNewLine();
