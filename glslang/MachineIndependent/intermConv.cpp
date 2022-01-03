@@ -953,9 +953,36 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
         case EOpSequence:      out.debug << "Sequence\n";       return true;
         case EOpLinkerObjects: out.debug << "Linker Objects\n"; return true;
         case EOpComma:         out.debug << "Comma";            break;
-        case EOpFunction:      out.debug << "Function Definition: " << node->getName(); break;
-        case EOpFunctionCall:  out.debug << "Function Call: "       << node->getName(); break;
-        case EOpParameters:    out.debug << "Function Parameters: ";                    break;
+        case EOpFunction: {
+            std::string::size_type n = node->getName().find("(");
+            if (n != std::string::npos) {
+                out.debug << node->getTypeString() << " " << node->getName().substr(0, n);
+            }
+            else {
+                out.debug << node->getTypeString() << " " << node->getName();
+            }
+            sequenceSeperator.push(";");
+            sequenceEnd.push(";");
+            localSymbols.clear();
+            level++;
+            break;
+        }
+        case EOpFunctionCall: {
+            std::string::size_type n = node->getName().find("(");
+            if (n != std::string::npos) {
+                out.debug << node->getName().substr(0, n);
+            }
+            else {
+                out.debug << node->getName();
+            }
+            out.debug << "(";
+            break;
+        }
+        case EOpParameters: {
+            declaringSymbol = 2;
+            out.debug << "(";
+            break;
+        }
 
         case EOpConstructFloat: out.debug << "Construct float"; break;
         case EOpConstructDouble:out.debug << "Construct double"; break;
@@ -1367,10 +1394,30 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
         }
     }
     else if (visit == EvInVisit) {
-
+        switch (node->getOp()) {
+        case EOpFunctionCall:
+        case EOpParameters: out.debug << ", "; break;
+        default: out.debug << "";
+        }
     }
     else if (visit == EvPostVisit) {
-
+        switch (node->getOp()) {
+        case EOpFunction: {
+            level--;
+            gotoNewLine();
+            out.debug << "}";
+            sequenceSeperator.pop();
+            sequenceEnd.pop();
+            break;
+        }
+        case EOpParameters: {
+            declaringSymbol = 0;
+            out.debug << ") {";
+            break;
+        }
+        case EOpFunctionCall: out.debug << ")"; break;
+        default: out.debug << "";
+        }
     }
     return true;
 }
