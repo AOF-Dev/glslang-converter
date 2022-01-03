@@ -101,7 +101,7 @@ class TConvertTraverser : public TIntermTraverser {
 public:
     TConvertTraverser(TInfoSink& i) : TIntermTraverser(true, true, true, false),
         infoSink(i), extraOutput(NoExtraOutput), lastLine(0), lastFile(0), level(0),
-        declaringSymbol(0), skipped(false) {
+        declaringSymbol(0), skipped(false), swizzling(false) {
         sequenceSeperator.push("");
         sequenceEnd.push("");
     }
@@ -128,6 +128,7 @@ public:
     int level;
     int declaringSymbol;
     bool skipped;
+    bool swizzling;
     std::stack<const char*> sequenceSeperator;
     std::stack<const char*> sequenceEnd;
     std::unordered_set<TString> globalSymbols;
@@ -202,7 +203,13 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
                 out.debug << (*members)[node->getRight()->getAsConstantUnion()->getConstArray()[0].getIConst()].type->getFieldName();
                 out.debug << ": direct index for structure";      break;
             }
-        case EOpVectorSwizzle: out.debug << "vector swizzle"; break;
+        case EOpVectorSwizzle: {
+            swizzling = true;
+            sequenceSeperator.push("");
+            sequenceEnd.push("");
+            out.debug << ".";
+            break;
+        }
         case EOpMatrixSwizzle: out.debug << "matrix swizzle"; break;
 
         case EOpAdd:    out.debug << " + "; break;
@@ -245,7 +252,15 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         }
     }
     else if (visit == EvPostVisit) {
-
+        switch (node->getOp()) {
+        case EOpVectorSwizzle: {
+            swizzling = false;
+            sequenceSeperator.pop();
+            sequenceEnd.pop();
+            break;
+        }
+        default: out.debug << "";
+        }
     }
 
     return true;
@@ -932,6 +947,7 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpLog2:
         case EOpSqrt:
         case EOpInverseSqrt: out.debug << ")"; break;
+        default: out.debug << "";
         }
     }
 
