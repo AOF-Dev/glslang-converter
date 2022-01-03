@@ -1028,7 +1028,7 @@ void SetMessageOptions(EShMessages& messages)
     if (Options & EOptionRelaxedErrors)
         messages = (EShMessages)(messages | EShMsgRelaxedErrors);
     if (Options & EOptionIntermediate)
-        messages = (EShMessages)(messages | EShMsgAST);
+        messages = (EShMessages)(messages | EShMsgAST | EShMsgConvert);
     if (Options & EOptionSuppressWarnings)
         messages = (EShMessages)(messages | EShMsgSuppressWarnings);
     if (Options & EOptionSpv)

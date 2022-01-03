@@ -1249,6 +1249,8 @@ struct DoFullParse{
 #ifndef GLSLANG_ANGLE
         if (messages & EShMsgAST)
             intermediate.output(parseContext.infoSink, true);
+        if (messages & EShMsgConvert)
+            intermediate.convert(parseContext.infoSink, true);
 #endif
 
         return success;
