@@ -47,6 +47,8 @@
 #include <cmath>
 #endif
 #include <cstdint>
+#include <stack>
+#include <unordered_set>
 
 namespace {
 
@@ -98,7 +100,11 @@ namespace glslang {
 class TConvertTraverser : public TIntermTraverser {
 public:
     TConvertTraverser(TInfoSink& i) : TIntermTraverser(true, true, true, false),
-        infoSink(i), extraOutput(NoExtraOutput), lastLine(0), lastFile(0), level(0) { }
+        infoSink(i), extraOutput(NoExtraOutput), lastLine(0), lastFile(0), level(0),
+        declaringSymbol(0), skipped(true) {
+        sequenceSeperator.push("");
+        sequenceEnd.push("");
+    }
 
     enum EExtraOutput {
         NoExtraOutput,
@@ -120,6 +126,12 @@ public:
     int lastLine;
     int lastFile;
     int level;
+    int declaringSymbol;
+    bool skipped;
+    std::stack<const char*> sequenceSeperator;
+    std::stack<const char*> sequenceEnd;
+    std::unordered_set<TString> globalSymbols;
+    std::unordered_set<TString> localSymbols;
 protected:
     TConvertTraverser(TConvertTraverser&);
     TConvertTraverser& operator=(TConvertTraverser&);
