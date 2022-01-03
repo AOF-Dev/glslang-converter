@@ -175,6 +175,25 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
 
     if (visit == EvPreVisit) {
         tryNewLine(node);
+        switch (node->getOp()) {
+        case EOpAdd:
+        case EOpSub:
+        case EOpMul:
+        case EOpDiv:
+        case EOpMod:
+        case EOpAnd:
+        case EOpInclusiveOr:
+        case EOpExclusiveOr:
+        case EOpVectorTimesScalar:
+        case EOpVectorTimesMatrix:
+        case EOpMatrixTimesVector:
+        case EOpMatrixTimesScalar:
+        case EOpMatrixTimesMatrix:
+        case EOpLogicalOr:
+        case EOpLogicalXor:
+        case EOpLogicalAnd: out.debug << "("; break;
+        default: out.debug << "";
+        }
     }
     else if (visit == EvInVisit) {
         switch (node->getOp()) {
@@ -267,6 +286,22 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
             sequenceEnd.pop();
             break;
         }
+        case EOpAdd:
+        case EOpSub:
+        case EOpMul:
+        case EOpDiv:
+        case EOpMod:
+        case EOpAnd:
+        case EOpInclusiveOr:
+        case EOpExclusiveOr:
+        case EOpVectorTimesScalar:
+        case EOpVectorTimesMatrix:
+        case EOpMatrixTimesVector:
+        case EOpMatrixTimesScalar:
+        case EOpMatrixTimesMatrix:
+        case EOpLogicalOr:
+        case EOpLogicalXor:
+        case EOpLogicalAnd: out.debug << ")"; break;
         default: out.debug << "";
         }
     }
