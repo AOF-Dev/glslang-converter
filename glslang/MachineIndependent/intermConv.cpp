@@ -1581,8 +1581,54 @@ void TConvertTraverser::visitConstantUnion(TIntermConstantUnion* node)
 
 void TConvertTraverser::visitSymbol(TIntermSymbol* node)
 {
-
-    infoSink.debug << "'" << node->getName() << "' (" << node->getCompleteString() << ")\n";
+    tryNewLine(node);
+    if (declaringSymbol == 0) {
+        if (node->getName().compare(0, 6, "anon@0") == 0) {
+            skipped = true;
+        }
+        else {
+            if (node->getName().compare(0, 3, "gl_") == 0 ||
+                globalSymbols.find(node->getName()) != globalSymbols.end() ||
+                localSymbols.find(node->getName()) != localSymbols.end()) {
+                infoSink.debug << node->getName();
+            }
+            else {
+                infoSink.debug << node->getTypeString() << " " << node->getName();
+                localSymbols.insert(node->getName());
+            }
+            skipped = false;
+        }
+    }
+    else {
+        if (node->getName().compare(0, 6, "anon@0") == 0) {
+            skipped = true;
+        }
+        else if (node->getName().compare(0, 3, "gl_") == 0) {
+            skipped = true;
+        }
+        else if (declaringSymbol == 1 && globalSymbols.find(node->getName()) != globalSymbols.end()) {
+            skipped = true;
+        }
+        else {
+            if (declaringSymbol == 1) {
+                TString qualifier = node->getStorageQualifierString();
+                if (qualifier.compare(0, 6, "global") == 0) {
+                    infoSink.debug << "";
+                }
+                else {
+                    infoSink.debug << node->getStorageQualifierString() << " ";
+                }
+            }
+            infoSink.debug << node->getTypeString() << " " << node->getName();
+            if (declaringSymbol == 1) {
+                globalSymbols.insert(node->getName());
+            }
+            else {
+                localSymbols.insert(node->getName());
+            }
+            skipped = false;
+        }
+    }
 
     if (! node->getConstArray().empty())
         OutputConstantUnion(infoSink, node, node->getConstArray(), extraOutput, depth + 1);
