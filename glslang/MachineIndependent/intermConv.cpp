@@ -251,10 +251,8 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         case EOpLogicalNot:     out.debug << "!";   break;
         case EOpBitwiseNot:     out.debug << "~";          break;
 
-        case EOpPostIncrement:  out.debug << "Post-Increment";       break;
-        case EOpPostDecrement:  out.debug << "Post-Decrement";       break;
-        case EOpPreIncrement:   out.debug << "Pre-Increment";        break;
-        case EOpPreDecrement:   out.debug << "Pre-Decrement";        break;
+        case EOpPreIncrement:   out.debug << "++";        break;
+        case EOpPreDecrement:   out.debug << "--";        break;
         case EOpCopyObject:     out.debug << "copy object";          break;
 
         // * -> bool
@@ -713,6 +711,8 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
     }
     else if (visit == EvPostVisit) {
         switch (node->getOp()) {
+        case EOpPostIncrement:  out.debug << "++";       break;
+        case EOpPostDecrement:  out.debug << "--";       break;
         // * -> bool
         case EOpConvInt8ToBool:
         case EOpConvUint8ToBool:
