@@ -246,10 +246,10 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
     if (visit == EvPreVisit) {
         tryNewLine(node);
         switch (node->getOp()) {
-        case EOpNegative:       out.debug << "Negate value";         break;
+        case EOpNegative:       out.debug << "-";         break;
         case EOpVectorLogicalNot:
-        case EOpLogicalNot:     out.debug << "Negate conditional";   break;
-        case EOpBitwiseNot:     out.debug << "Bitwise not";          break;
+        case EOpLogicalNot:     out.debug << "!";   break;
+        case EOpBitwiseNot:     out.debug << "~";          break;
 
         case EOpPostIncrement:  out.debug << "Post-Increment";       break;
         case EOpPostDecrement:  out.debug << "Post-Decrement";       break;
