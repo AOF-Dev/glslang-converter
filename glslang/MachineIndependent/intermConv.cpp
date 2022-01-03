@@ -772,7 +772,7 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
             sequenceEnd.push("");
             break;
         }
-        case EOpLinkerObjects: out.debug << "Linker Objects\n"; return true;
+        case EOpLinkerObjects: declaringSymbol = 1; break;
         case EOpComma:         out.debug << "Comma";            break;
         case EOpFunction: {
             std::string::size_type n = node->getName().find("(");
@@ -1216,6 +1216,15 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
     }
     else if (visit == EvInVisit) {
         switch (node->getOp()) {
+        case EOpLinkerObjects: {
+            if (!skipped) {
+                out.debug << ";";
+            }
+            else {
+                skipped = false;
+            }
+            return true;
+        }
         case EOpSequence: {
             if (!skipped) {
                 out.debug << sequenceSeperator.top();
@@ -1231,6 +1240,16 @@ bool TConvertTraverser::visitAggregate(TVisit visit, TIntermAggregate* node)
     }
     else if (visit == EvPostVisit) {
         switch (node->getOp()) {
+        case EOpLinkerObjects: {
+            declaringSymbol = 0;
+            if (!skipped) {
+                out.debug << ";";
+            }
+            else {
+                skipped = false;
+            }
+            return true;
+        }
         case EOpSequence: {
             sequenceSeperator.pop();
             sequenceEnd.pop();
