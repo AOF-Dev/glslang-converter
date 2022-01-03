@@ -2382,7 +2382,6 @@ public:
         TString typeString;
 
         const auto appendStr  = [&](const char* s)  { typeString.append(s); };
-        const auto appendUint = [&](unsigned int u) { typeString.append(std::to_string(u).c_str()); };
         const auto appendInt  = [&](int i)          { typeString.append(std::to_string(i).c_str()); };
         bool isBasic = true;
         if (isVector()) {
@@ -2429,6 +2428,46 @@ public:
                     }
                     appendStr("]");
                 }
+            }
+            isBasic = false;
+        }
+        if (isBasic) {
+            return getBasicTypeString();
+        }
+        else {
+            return typeString;
+        }
+    }
+
+    TString getArrayElementTypeString() const
+    {
+        TString typeString;
+
+        const auto appendStr  = [&](const char* s)  { typeString.append(s); };
+        const auto appendInt  = [&](int i)          { typeString.append(std::to_string(i).c_str()); };
+        bool isBasic = true;
+        if (isVector()) {
+            if (getBasicTypeString() == "int") {
+                appendStr("ivec");
+            }
+            else if (getBasicTypeString() == "bool") {
+                appendStr("bvec");
+            }
+            else {
+                appendStr("vec");
+            }
+            appendInt(vectorSize);
+            isBasic = false;
+        }
+        else if (isMatrix()) {
+            appendStr("mat");
+            if (matrixCols == matrixRows) {
+                appendInt(matrixCols);
+            }
+            else {
+                appendInt(matrixCols);
+                appendStr("x");
+                appendInt(matrixRows);
             }
             isBasic = false;
         }
