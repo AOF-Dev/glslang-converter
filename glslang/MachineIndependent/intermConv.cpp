@@ -711,9 +711,6 @@ bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
         default: out.debug.message(EPrefixError, "Bad unary op");
         }
     }
-    else if (visit == EvInVisit) {
-
-    }
     else if (visit == EvPostVisit) {
         switch (node->getOp()) {
         // * -> bool
