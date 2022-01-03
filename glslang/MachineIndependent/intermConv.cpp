@@ -1756,7 +1756,30 @@ void TIntermediate::convert(TInfoSink& infoSink, bool tree)
     TConvertTraverser it(infoSink);
     if (getBinaryDoubleOutput())
         it.setDoubleOutput(TConvertTraverser::BinaryDoubleOutput);
-    treeRoot->traverse(&it);
+
+    TIntermAggregate* rootSequence = treeRoot->getAsAggregate();
+    TIntermAggregate* linkerObject = NULL;
+    if (rootSequence != NULL) {
+        TIntermSequence vec(rootSequence->getSequence());
+        linkerObject = vec.back()->getAsAggregate();
+        if (linkerObject != NULL) {
+            int pos = 0;
+            for (TIntermNode* node : vec) {
+                TIntermAggregate* seq = node->getAsAggregate();
+                if (seq == NULL || seq->getOp() != EOpSequence) {
+                    break;
+                }
+                else {
+                    pos++;
+                }
+            }
+            vec.insert(vec.begin() + pos, linkerObject);
+            vec.pop_back();
+        }
+        for (TIntermNode* node : vec) {
+            node->traverse(&it);
+        }
+    }
 }
 
 } // end namespace glslang
