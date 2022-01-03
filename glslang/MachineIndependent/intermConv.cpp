@@ -239,479 +239,484 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
     return true;
 }
 
-bool TConvertTraverser::visitUnary(TVisit /* visit */, TIntermUnary* node)
+bool TConvertTraverser::visitUnary(TVisit visit, TIntermUnary* node)
 {
     TInfoSink& out = infoSink;
 
-    switch (node->getOp()) {
-    case EOpNegative:       out.debug << "Negate value";         break;
-    case EOpVectorLogicalNot:
-    case EOpLogicalNot:     out.debug << "Negate conditional";   break;
-    case EOpBitwiseNot:     out.debug << "Bitwise not";          break;
-
-    case EOpPostIncrement:  out.debug << "Post-Increment";       break;
-    case EOpPostDecrement:  out.debug << "Post-Decrement";       break;
-    case EOpPreIncrement:   out.debug << "Pre-Increment";        break;
-    case EOpPreDecrement:   out.debug << "Pre-Decrement";        break;
-    case EOpCopyObject:     out.debug << "copy object";          break;
-
-    // * -> bool
-    case EOpConvInt8ToBool:    out.debug << "Convert int8_t to bool";  break;
-    case EOpConvUint8ToBool:   out.debug << "Convert uint8_t to bool"; break;
-    case EOpConvInt16ToBool:   out.debug << "Convert int16_t to bool"; break;
-    case EOpConvUint16ToBool:  out.debug << "Convert uint16_t to bool";break;
-    case EOpConvIntToBool:     out.debug << "Convert int to bool";     break;
-    case EOpConvUintToBool:    out.debug << "Convert uint to bool";    break;
-    case EOpConvInt64ToBool:   out.debug << "Convert int64 to bool";   break;
-    case EOpConvUint64ToBool:  out.debug << "Convert uint64 to bool";  break;
-    case EOpConvFloat16ToBool: out.debug << "Convert float16_t to bool";   break;
-    case EOpConvFloatToBool:   out.debug << "Convert float to bool";   break;
-    case EOpConvDoubleToBool:  out.debug << "Convert double to bool";  break;
-
-    // bool -> *
-    case EOpConvBoolToInt8:    out.debug << "Convert bool to int8_t";  break;
-    case EOpConvBoolToUint8:   out.debug << "Convert bool to uint8_t"; break;
-    case EOpConvBoolToInt16:   out.debug << "Convert bool to in16t_t"; break;
-    case EOpConvBoolToUint16:  out.debug << "Convert bool to uint16_t";break;
-    case EOpConvBoolToInt:     out.debug << "Convert bool to int"  ;   break;
-    case EOpConvBoolToUint:    out.debug << "Convert bool to uint";    break;
-    case EOpConvBoolToInt64:   out.debug << "Convert bool to int64"; break;
-    case EOpConvBoolToUint64:  out.debug << "Convert bool to uint64";break;
-    case EOpConvBoolToFloat16: out.debug << "Convert bool to float16_t";   break;
-    case EOpConvBoolToFloat:   out.debug << "Convert bool to float";   break;
-    case EOpConvBoolToDouble:  out.debug << "Convert bool to double";   break;
-
-    // int8_t -> (u)int*
-    case EOpConvInt8ToInt16:   out.debug << "Convert int8_t to int16_t";break;
-    case EOpConvInt8ToInt:     out.debug << "Convert int8_t to int";    break;
-    case EOpConvInt8ToInt64:   out.debug << "Convert int8_t to int64";   break;
-    case EOpConvInt8ToUint8:   out.debug << "Convert int8_t to uint8_t";break;
-    case EOpConvInt8ToUint16:  out.debug << "Convert int8_t to uint16_t";break;
-    case EOpConvInt8ToUint:    out.debug << "Convert int8_t to uint";    break;
-    case EOpConvInt8ToUint64:  out.debug << "Convert int8_t to uint64";   break;
-
-    // uint8_t -> (u)int*
-    case EOpConvUint8ToInt8:    out.debug << "Convert uint8_t to int8_t";break;
-    case EOpConvUint8ToInt16:   out.debug << "Convert uint8_t to int16_t";break;
-    case EOpConvUint8ToInt:     out.debug << "Convert uint8_t to int";    break;
-    case EOpConvUint8ToInt64:   out.debug << "Convert uint8_t to int64";   break;
-    case EOpConvUint8ToUint16:  out.debug << "Convert uint8_t to uint16_t";break;
-    case EOpConvUint8ToUint:    out.debug << "Convert uint8_t to uint";    break;
-    case EOpConvUint8ToUint64:  out.debug << "Convert uint8_t to uint64";   break;
-
-    // int8_t -> float*
-    case EOpConvInt8ToFloat16:  out.debug << "Convert int8_t to float16_t";break;
-    case EOpConvInt8ToFloat:    out.debug << "Convert int8_t to float";    break;
-    case EOpConvInt8ToDouble:   out.debug << "Convert int8_t to double";   break;
-
-    // uint8_t -> float*
-    case EOpConvUint8ToFloat16: out.debug << "Convert uint8_t to float16_t";break;
-    case EOpConvUint8ToFloat:   out.debug << "Convert uint8_t to float";    break;
-    case EOpConvUint8ToDouble:  out.debug << "Convert uint8_t to double";   break;
-
-    // int16_t -> (u)int*
-    case EOpConvInt16ToInt8:    out.debug << "Convert int16_t to int8_t";break;
-    case EOpConvInt16ToInt:     out.debug << "Convert int16_t to int";    break;
-    case EOpConvInt16ToInt64:   out.debug << "Convert int16_t to int64";   break;
-    case EOpConvInt16ToUint8:   out.debug << "Convert int16_t to uint8_t";break;
-    case EOpConvInt16ToUint16:  out.debug << "Convert int16_t to uint16_t";break;
-    case EOpConvInt16ToUint:    out.debug << "Convert int16_t to uint";    break;
-    case EOpConvInt16ToUint64:  out.debug << "Convert int16_t to uint64";   break;
-
-    // int16_t -> float*
-    case EOpConvInt16ToFloat16:  out.debug << "Convert int16_t to float16_t";break;
-    case EOpConvInt16ToFloat:    out.debug << "Convert int16_t to float";    break;
-    case EOpConvInt16ToDouble:   out.debug << "Convert int16_t to double";   break;
-
-    // uint16_t -> (u)int*
-    case EOpConvUint16ToInt8:    out.debug << "Convert uint16_t to int8_t";break;
-    case EOpConvUint16ToInt16:   out.debug << "Convert uint16_t to int16_t";break;
-    case EOpConvUint16ToInt:     out.debug << "Convert uint16_t to int";    break;
-    case EOpConvUint16ToInt64:   out.debug << "Convert uint16_t to int64";   break;
-    case EOpConvUint16ToUint8:   out.debug << "Convert uint16_t to uint8_t";break;
-    case EOpConvUint16ToUint:    out.debug << "Convert uint16_t to uint";    break;
-    case EOpConvUint16ToUint64:  out.debug << "Convert uint16_t to uint64";   break;
-
-    // uint16_t -> float*
-    case EOpConvUint16ToFloat16: out.debug << "Convert uint16_t to float16_t";break;
-    case EOpConvUint16ToFloat:   out.debug << "Convert uint16_t to float";    break;
-    case EOpConvUint16ToDouble:  out.debug << "Convert uint16_t to double";   break;
-
-    // int32_t -> (u)int*
-    case EOpConvIntToInt8:    out.debug << "Convert int to int8_t";break;
-    case EOpConvIntToInt16:   out.debug << "Convert int to int16_t";break;
-    case EOpConvIntToInt64:   out.debug << "Convert int to int64";   break;
-    case EOpConvIntToUint8:   out.debug << "Convert int to uint8_t";break;
-    case EOpConvIntToUint16:  out.debug << "Convert int to uint16_t";break;
-    case EOpConvIntToUint:    out.debug << "Convert int to uint";    break;
-    case EOpConvIntToUint64:  out.debug << "Convert int to uint64";   break;
-
-    // int32_t -> float*
-    case EOpConvIntToFloat16:  out.debug << "Convert int to float16_t";break;
-    case EOpConvIntToFloat:    out.debug << "Convert int to float";    break;
-    case EOpConvIntToDouble:   out.debug << "Convert int to double";   break;
-
-    // uint32_t -> (u)int*
-    case EOpConvUintToInt8:    out.debug << "Convert uint to int8_t";break;
-    case EOpConvUintToInt16:   out.debug << "Convert uint to int16_t";break;
-    case EOpConvUintToInt:     out.debug << "Convert uint to int";break;
-    case EOpConvUintToInt64:   out.debug << "Convert uint to int64";   break;
-    case EOpConvUintToUint8:   out.debug << "Convert uint to uint8_t";break;
-    case EOpConvUintToUint16:  out.debug << "Convert uint to uint16_t";break;
-    case EOpConvUintToUint64:  out.debug << "Convert uint to uint64";   break;
-
-    // uint32_t -> float*
-    case EOpConvUintToFloat16: out.debug << "Convert uint to float16_t";break;
-    case EOpConvUintToFloat:   out.debug << "Convert uint to float";    break;
-    case EOpConvUintToDouble:  out.debug << "Convert uint to double";   break;
-
-    // int64 -> (u)int*
-    case EOpConvInt64ToInt8:    out.debug << "Convert int64 to int8_t";  break;
-    case EOpConvInt64ToInt16:   out.debug << "Convert int64 to int16_t"; break;
-    case EOpConvInt64ToInt:     out.debug << "Convert int64 to int";   break;
-    case EOpConvInt64ToUint8:   out.debug << "Convert int64 to uint8_t";break;
-    case EOpConvInt64ToUint16:  out.debug << "Convert int64 to uint16_t";break;
-    case EOpConvInt64ToUint:    out.debug << "Convert int64 to uint";    break;
-    case EOpConvInt64ToUint64:  out.debug << "Convert int64 to uint64";   break;
-
-     // int64 -> float*
-    case EOpConvInt64ToFloat16:  out.debug << "Convert int64 to float16_t";break;
-    case EOpConvInt64ToFloat:    out.debug << "Convert int64 to float";    break;
-    case EOpConvInt64ToDouble:   out.debug << "Convert int64 to double";   break;
-
-    // uint64 -> (u)int*
-    case EOpConvUint64ToInt8:    out.debug << "Convert uint64 to int8_t";break;
-    case EOpConvUint64ToInt16:   out.debug << "Convert uint64 to int16_t";break;
-    case EOpConvUint64ToInt:     out.debug << "Convert uint64 to int";    break;
-    case EOpConvUint64ToInt64:   out.debug << "Convert uint64 to int64";   break;
-    case EOpConvUint64ToUint8:   out.debug << "Convert uint64 to uint8_t";break;
-    case EOpConvUint64ToUint16:  out.debug << "Convert uint64 to uint16";    break;
-    case EOpConvUint64ToUint:    out.debug << "Convert uint64 to uint";   break;
-
-    // uint64 -> float*
-    case EOpConvUint64ToFloat16: out.debug << "Convert uint64 to float16_t";break;
-    case EOpConvUint64ToFloat:   out.debug << "Convert uint64 to float";    break;
-    case EOpConvUint64ToDouble:  out.debug << "Convert uint64 to double";   break;
-
-    // float16_t -> int*
-    case EOpConvFloat16ToInt8:  out.debug << "Convert float16_t to int8_t"; break;
-    case EOpConvFloat16ToInt16: out.debug << "Convert float16_t to int16_t"; break;
-    case EOpConvFloat16ToInt:   out.debug << "Convert float16_t to int"; break;
-    case EOpConvFloat16ToInt64: out.debug << "Convert float16_t to int64"; break;
-
-    // float16_t -> uint*
-    case EOpConvFloat16ToUint8:  out.debug << "Convert float16_t to uint8_t"; break;
-    case EOpConvFloat16ToUint16: out.debug << "Convert float16_t to uint16_t"; break;
-    case EOpConvFloat16ToUint:   out.debug << "Convert float16_t to uint"; break;
-    case EOpConvFloat16ToUint64: out.debug << "Convert float16_t to uint64"; break;
-
-    // float16_t -> float*
-    case EOpConvFloat16ToFloat:  out.debug << "Convert float16_t to float"; break;
-    case EOpConvFloat16ToDouble: out.debug << "Convert float16_t to double"; break;
-
-    // float32 -> float*
-    case EOpConvFloatToFloat16: out.debug << "Convert float to float16_t"; break;
-    case EOpConvFloatToDouble:  out.debug << "Convert float to double"; break;
-
-    // float32_t -> int*
-    case EOpConvFloatToInt8:  out.debug << "Convert float to int8_t"; break;
-    case EOpConvFloatToInt16: out.debug << "Convert float to int16_t"; break;
-    case EOpConvFloatToInt:   out.debug << "Convert float to int"; break;
-    case EOpConvFloatToInt64: out.debug << "Convert float to int64"; break;
-
-    // float32_t -> uint*
-    case EOpConvFloatToUint8:  out.debug << "Convert float to uint8_t"; break;
-    case EOpConvFloatToUint16: out.debug << "Convert float to uint16_t"; break;
-    case EOpConvFloatToUint:   out.debug << "Convert float to uint"; break;
-    case EOpConvFloatToUint64: out.debug << "Convert float to uint64"; break;
-
-    // double -> float*
-    case EOpConvDoubleToFloat16: out.debug << "Convert double to float16_t"; break;
-    case EOpConvDoubleToFloat:   out.debug << "Convert double to float"; break;
-
-    // double -> int*
-    case EOpConvDoubleToInt8:  out.debug << "Convert double to int8_t"; break;
-    case EOpConvDoubleToInt16: out.debug << "Convert double to int16_t"; break;
-    case EOpConvDoubleToInt:   out.debug << "Convert double to int"; break;
-    case EOpConvDoubleToInt64: out.debug << "Convert double to int64"; break;
-
-    // float32_t -> uint*
-    case EOpConvDoubleToUint8:  out.debug << "Convert double to uint8_t"; break;
-    case EOpConvDoubleToUint16: out.debug << "Convert double to uint16_t"; break;
-    case EOpConvDoubleToUint:   out.debug << "Convert double to uint"; break;
-    case EOpConvDoubleToUint64: out.debug << "Convert double to uint64"; break;
-
-    case EOpConvUint64ToPtr:  out.debug << "Convert uint64_t to pointer";   break;
-    case EOpConvPtrToUint64:  out.debug << "Convert pointer to uint64_t";   break;
-
-    case EOpConvUint64ToAccStruct: out.debug << "Convert uint64_t to acceleration structure"; break;
-    case EOpConvUvec2ToAccStruct:  out.debug << "Convert uvec2 to acceleration strucuture "; break;
-
-    case EOpRadians:        out.debug << "radians";              break;
-    case EOpDegrees:        out.debug << "degrees";              break;
-    case EOpSin:            out.debug << "sine";                 break;
-    case EOpCos:            out.debug << "cosine";               break;
-    case EOpTan:            out.debug << "tangent";              break;
-    case EOpAsin:           out.debug << "arc sine";             break;
-    case EOpAcos:           out.debug << "arc cosine";           break;
-    case EOpAtan:           out.debug << "arc tangent";          break;
-    case EOpSinh:           out.debug << "hyp. sine";            break;
-    case EOpCosh:           out.debug << "hyp. cosine";          break;
-    case EOpTanh:           out.debug << "hyp. tangent";         break;
-    case EOpAsinh:          out.debug << "arc hyp. sine";        break;
-    case EOpAcosh:          out.debug << "arc hyp. cosine";      break;
-    case EOpAtanh:          out.debug << "arc hyp. tangent";     break;
-
-    case EOpExp:            out.debug << "exp";                  break;
-    case EOpLog:            out.debug << "log";                  break;
-    case EOpExp2:           out.debug << "exp2";                 break;
-    case EOpLog2:           out.debug << "log2";                 break;
-    case EOpSqrt:           out.debug << "sqrt";                 break;
-    case EOpInverseSqrt:    out.debug << "inverse sqrt";         break;
-
-    case EOpAbs:            out.debug << "Absolute value";       break;
-    case EOpSign:           out.debug << "Sign";                 break;
-    case EOpFloor:          out.debug << "Floor";                break;
-    case EOpTrunc:          out.debug << "trunc";                break;
-    case EOpRound:          out.debug << "round";                break;
-    case EOpRoundEven:      out.debug << "roundEven";            break;
-    case EOpCeil:           out.debug << "Ceiling";              break;
-    case EOpFract:          out.debug << "Fraction";             break;
-
-    case EOpIsNan:          out.debug << "isnan";                break;
-    case EOpIsInf:          out.debug << "isinf";                break;
-
-    case EOpFloatBitsToInt: out.debug << "floatBitsToInt";       break;
-    case EOpFloatBitsToUint:out.debug << "floatBitsToUint";      break;
-    case EOpIntBitsToFloat: out.debug << "intBitsToFloat";       break;
-    case EOpUintBitsToFloat:out.debug << "uintBitsToFloat";      break;
-    case EOpDoubleBitsToInt64:  out.debug << "doubleBitsToInt64";  break;
-    case EOpDoubleBitsToUint64: out.debug << "doubleBitsToUint64"; break;
-    case EOpInt64BitsToDouble:  out.debug << "int64BitsToDouble";  break;
-    case EOpUint64BitsToDouble: out.debug << "uint64BitsToDouble"; break;
-    case EOpFloat16BitsToInt16:  out.debug << "float16BitsToInt16";  break;
-    case EOpFloat16BitsToUint16: out.debug << "float16BitsToUint16"; break;
-    case EOpInt16BitsToFloat16:  out.debug << "int16BitsToFloat16";  break;
-    case EOpUint16BitsToFloat16: out.debug << "uint16BitsToFloat16"; break;
-
-    case EOpPackSnorm2x16:  out.debug << "packSnorm2x16";        break;
-    case EOpUnpackSnorm2x16:out.debug << "unpackSnorm2x16";      break;
-    case EOpPackUnorm2x16:  out.debug << "packUnorm2x16";        break;
-    case EOpUnpackUnorm2x16:out.debug << "unpackUnorm2x16";      break;
-    case EOpPackHalf2x16:   out.debug << "packHalf2x16";         break;
-    case EOpUnpackHalf2x16: out.debug << "unpackHalf2x16";       break;
-    case EOpPack16:           out.debug << "pack16";                 break;
-    case EOpPack32:           out.debug << "pack32";                 break;
-    case EOpPack64:           out.debug << "pack64";                 break;
-    case EOpUnpack32:         out.debug << "unpack32";               break;
-    case EOpUnpack16:         out.debug << "unpack16";               break;
-    case EOpUnpack8:          out.debug << "unpack8";               break;
-
-    case EOpPackSnorm4x8:     out.debug << "PackSnorm4x8";       break;
-    case EOpUnpackSnorm4x8:   out.debug << "UnpackSnorm4x8";     break;
-    case EOpPackUnorm4x8:     out.debug << "PackUnorm4x8";       break;
-    case EOpUnpackUnorm4x8:   out.debug << "UnpackUnorm4x8";     break;
-    case EOpPackDouble2x32:   out.debug << "PackDouble2x32";     break;
-    case EOpUnpackDouble2x32: out.debug << "UnpackDouble2x32";   break;
-
-    case EOpPackInt2x32:      out.debug << "packInt2x32";        break;
-    case EOpUnpackInt2x32:    out.debug << "unpackInt2x32";      break;
-    case EOpPackUint2x32:     out.debug << "packUint2x32";       break;
-    case EOpUnpackUint2x32:   out.debug << "unpackUint2x32";     break;
-
-    case EOpPackInt2x16:      out.debug << "packInt2x16";        break;
-    case EOpUnpackInt2x16:    out.debug << "unpackInt2x16";      break;
-    case EOpPackUint2x16:     out.debug << "packUint2x16";       break;
-    case EOpUnpackUint2x16:   out.debug << "unpackUint2x16";     break;
-
-    case EOpPackInt4x16:      out.debug << "packInt4x16";        break;
-    case EOpUnpackInt4x16:    out.debug << "unpackInt4x16";      break;
-    case EOpPackUint4x16:     out.debug << "packUint4x16";       break;
-    case EOpUnpackUint4x16:   out.debug << "unpackUint4x16";     break;
-    case EOpPackFloat2x16:    out.debug << "packFloat2x16";      break;
-    case EOpUnpackFloat2x16:  out.debug << "unpackFloat2x16";    break;
-
-    case EOpLength:         out.debug << "length";               break;
-    case EOpNormalize:      out.debug << "normalize";            break;
-    case EOpDPdx:           out.debug << "dPdx";                 break;
-    case EOpDPdy:           out.debug << "dPdy";                 break;
-    case EOpFwidth:         out.debug << "fwidth";               break;
-    case EOpDPdxFine:       out.debug << "dPdxFine";             break;
-    case EOpDPdyFine:       out.debug << "dPdyFine";             break;
-    case EOpFwidthFine:     out.debug << "fwidthFine";           break;
-    case EOpDPdxCoarse:     out.debug << "dPdxCoarse";           break;
-    case EOpDPdyCoarse:     out.debug << "dPdyCoarse";           break;
-    case EOpFwidthCoarse:   out.debug << "fwidthCoarse";         break;
-
-    case EOpInterpolateAtCentroid: out.debug << "interpolateAtCentroid";  break;
-
-    case EOpDeterminant:    out.debug << "determinant";          break;
-    case EOpMatrixInverse:  out.debug << "inverse";              break;
-    case EOpTranspose:      out.debug << "transpose";            break;
-
-    case EOpAny:            out.debug << "any";                  break;
-    case EOpAll:            out.debug << "all";                  break;
-
-    case EOpArrayLength:    out.debug << "array length";         break;
-
-    case EOpEmitStreamVertex:   out.debug << "EmitStreamVertex";   break;
-    case EOpEndStreamPrimitive: out.debug << "EndStreamPrimitive"; break;
-
-    case EOpAtomicCounterIncrement: out.debug << "AtomicCounterIncrement";break;
-    case EOpAtomicCounterDecrement: out.debug << "AtomicCounterDecrement";break;
-    case EOpAtomicCounter:          out.debug << "AtomicCounter";         break;
-
-    case EOpTextureQuerySize:       out.debug << "textureSize";           break;
-    case EOpTextureQueryLod:        out.debug << "textureQueryLod";       break;
-    case EOpTextureQueryLevels:     out.debug << "textureQueryLevels";    break;
-    case EOpTextureQuerySamples:    out.debug << "textureSamples";        break;
-    case EOpImageQuerySize:         out.debug << "imageQuerySize";        break;
-    case EOpImageQuerySamples:      out.debug << "imageQuerySamples";     break;
-    case EOpImageLoad:              out.debug << "imageLoad";             break;
-
-    case EOpBitFieldReverse:        out.debug << "bitFieldReverse";       break;
-    case EOpBitCount:               out.debug << "bitCount";              break;
-    case EOpFindLSB:                out.debug << "findLSB";               break;
-    case EOpFindMSB:                out.debug << "findMSB";               break;
-
-    case EOpCountLeadingZeros:      out.debug << "countLeadingZeros";     break;
-    case EOpCountTrailingZeros:     out.debug << "countTrailingZeros";    break;
-
-    case EOpNoise:                  out.debug << "noise";                 break;
-
-    case EOpBallot:                 out.debug << "ballot";                break;
-    case EOpReadFirstInvocation:    out.debug << "readFirstInvocation";   break;
-
-    case EOpAnyInvocation:          out.debug << "anyInvocation";         break;
-    case EOpAllInvocations:         out.debug << "allInvocations";        break;
-    case EOpAllInvocationsEqual:    out.debug << "allInvocationsEqual";   break;
-
-    case EOpSubgroupElect:                   out.debug << "subgroupElect";                   break;
-    case EOpSubgroupAll:                     out.debug << "subgroupAll";                     break;
-    case EOpSubgroupAny:                     out.debug << "subgroupAny";                     break;
-    case EOpSubgroupAllEqual:                out.debug << "subgroupAllEqual";                break;
-    case EOpSubgroupBroadcast:               out.debug << "subgroupBroadcast";               break;
-    case EOpSubgroupBroadcastFirst:          out.debug << "subgroupBroadcastFirst";          break;
-    case EOpSubgroupBallot:                  out.debug << "subgroupBallot";                  break;
-    case EOpSubgroupInverseBallot:           out.debug << "subgroupInverseBallot";           break;
-    case EOpSubgroupBallotBitExtract:        out.debug << "subgroupBallotBitExtract";        break;
-    case EOpSubgroupBallotBitCount:          out.debug << "subgroupBallotBitCount";          break;
-    case EOpSubgroupBallotInclusiveBitCount: out.debug << "subgroupBallotInclusiveBitCount"; break;
-    case EOpSubgroupBallotExclusiveBitCount: out.debug << "subgroupBallotExclusiveBitCount"; break;
-    case EOpSubgroupBallotFindLSB:           out.debug << "subgroupBallotFindLSB";           break;
-    case EOpSubgroupBallotFindMSB:           out.debug << "subgroupBallotFindMSB";           break;
-    case EOpSubgroupShuffle:                 out.debug << "subgroupShuffle";                 break;
-    case EOpSubgroupShuffleXor:              out.debug << "subgroupShuffleXor";              break;
-    case EOpSubgroupShuffleUp:               out.debug << "subgroupShuffleUp";               break;
-    case EOpSubgroupShuffleDown:             out.debug << "subgroupShuffleDown";             break;
-    case EOpSubgroupAdd:                     out.debug << "subgroupAdd";                     break;
-    case EOpSubgroupMul:                     out.debug << "subgroupMul";                     break;
-    case EOpSubgroupMin:                     out.debug << "subgroupMin";                     break;
-    case EOpSubgroupMax:                     out.debug << "subgroupMax";                     break;
-    case EOpSubgroupAnd:                     out.debug << "subgroupAnd";                     break;
-    case EOpSubgroupOr:                      out.debug << "subgroupOr";                      break;
-    case EOpSubgroupXor:                     out.debug << "subgroupXor";                     break;
-    case EOpSubgroupInclusiveAdd:            out.debug << "subgroupInclusiveAdd";            break;
-    case EOpSubgroupInclusiveMul:            out.debug << "subgroupInclusiveMul";            break;
-    case EOpSubgroupInclusiveMin:            out.debug << "subgroupInclusiveMin";            break;
-    case EOpSubgroupInclusiveMax:            out.debug << "subgroupInclusiveMax";            break;
-    case EOpSubgroupInclusiveAnd:            out.debug << "subgroupInclusiveAnd";            break;
-    case EOpSubgroupInclusiveOr:             out.debug << "subgroupInclusiveOr";             break;
-    case EOpSubgroupInclusiveXor:            out.debug << "subgroupInclusiveXor";            break;
-    case EOpSubgroupExclusiveAdd:            out.debug << "subgroupExclusiveAdd";            break;
-    case EOpSubgroupExclusiveMul:            out.debug << "subgroupExclusiveMul";            break;
-    case EOpSubgroupExclusiveMin:            out.debug << "subgroupExclusiveMin";            break;
-    case EOpSubgroupExclusiveMax:            out.debug << "subgroupExclusiveMax";            break;
-    case EOpSubgroupExclusiveAnd:            out.debug << "subgroupExclusiveAnd";            break;
-    case EOpSubgroupExclusiveOr:             out.debug << "subgroupExclusiveOr";             break;
-    case EOpSubgroupExclusiveXor:            out.debug << "subgroupExclusiveXor";            break;
-    case EOpSubgroupClusteredAdd:            out.debug << "subgroupClusteredAdd";            break;
-    case EOpSubgroupClusteredMul:            out.debug << "subgroupClusteredMul";            break;
-    case EOpSubgroupClusteredMin:            out.debug << "subgroupClusteredMin";            break;
-    case EOpSubgroupClusteredMax:            out.debug << "subgroupClusteredMax";            break;
-    case EOpSubgroupClusteredAnd:            out.debug << "subgroupClusteredAnd";            break;
-    case EOpSubgroupClusteredOr:             out.debug << "subgroupClusteredOr";             break;
-    case EOpSubgroupClusteredXor:            out.debug << "subgroupClusteredXor";            break;
-    case EOpSubgroupQuadBroadcast:           out.debug << "subgroupQuadBroadcast";           break;
-    case EOpSubgroupQuadSwapHorizontal:      out.debug << "subgroupQuadSwapHorizontal";      break;
-    case EOpSubgroupQuadSwapVertical:        out.debug << "subgroupQuadSwapVertical";        break;
-    case EOpSubgroupQuadSwapDiagonal:        out.debug << "subgroupQuadSwapDiagonal";        break;
-
-    case EOpSubgroupPartition:                          out.debug << "subgroupPartitionNV";                          break;
-    case EOpSubgroupPartitionedAdd:                     out.debug << "subgroupPartitionedAddNV";                     break;
-    case EOpSubgroupPartitionedMul:                     out.debug << "subgroupPartitionedMulNV";                     break;
-    case EOpSubgroupPartitionedMin:                     out.debug << "subgroupPartitionedMinNV";                     break;
-    case EOpSubgroupPartitionedMax:                     out.debug << "subgroupPartitionedMaxNV";                     break;
-    case EOpSubgroupPartitionedAnd:                     out.debug << "subgroupPartitionedAndNV";                     break;
-    case EOpSubgroupPartitionedOr:                      out.debug << "subgroupPartitionedOrNV";                      break;
-    case EOpSubgroupPartitionedXor:                     out.debug << "subgroupPartitionedXorNV";                     break;
-    case EOpSubgroupPartitionedInclusiveAdd:            out.debug << "subgroupPartitionedInclusiveAddNV";            break;
-    case EOpSubgroupPartitionedInclusiveMul:            out.debug << "subgroupPartitionedInclusiveMulNV";            break;
-    case EOpSubgroupPartitionedInclusiveMin:            out.debug << "subgroupPartitionedInclusiveMinNV";            break;
-    case EOpSubgroupPartitionedInclusiveMax:            out.debug << "subgroupPartitionedInclusiveMaxNV";            break;
-    case EOpSubgroupPartitionedInclusiveAnd:            out.debug << "subgroupPartitionedInclusiveAndNV";            break;
-    case EOpSubgroupPartitionedInclusiveOr:             out.debug << "subgroupPartitionedInclusiveOrNV";             break;
-    case EOpSubgroupPartitionedInclusiveXor:            out.debug << "subgroupPartitionedInclusiveXorNV";            break;
-    case EOpSubgroupPartitionedExclusiveAdd:            out.debug << "subgroupPartitionedExclusiveAddNV";            break;
-    case EOpSubgroupPartitionedExclusiveMul:            out.debug << "subgroupPartitionedExclusiveMulNV";            break;
-    case EOpSubgroupPartitionedExclusiveMin:            out.debug << "subgroupPartitionedExclusiveMinNV";            break;
-    case EOpSubgroupPartitionedExclusiveMax:            out.debug << "subgroupPartitionedExclusiveMaxNV";            break;
-    case EOpSubgroupPartitionedExclusiveAnd:            out.debug << "subgroupPartitionedExclusiveAndNV";            break;
-    case EOpSubgroupPartitionedExclusiveOr:             out.debug << "subgroupPartitionedExclusiveOrNV";             break;
-    case EOpSubgroupPartitionedExclusiveXor:            out.debug << "subgroupPartitionedExclusiveXorNV";            break;
-
-    case EOpClip:                   out.debug << "clip";                  break;
-    case EOpIsFinite:               out.debug << "isfinite";              break;
-    case EOpLog10:                  out.debug << "log10";                 break;
-    case EOpRcp:                    out.debug << "rcp";                   break;
-    case EOpSaturate:               out.debug << "saturate";              break;
-
-    case EOpSparseTexelsResident:   out.debug << "sparseTexelsResident";  break;
-
-    case EOpMinInvocations:             out.debug << "minInvocations";              break;
-    case EOpMaxInvocations:             out.debug << "maxInvocations";              break;
-    case EOpAddInvocations:             out.debug << "addInvocations";              break;
-    case EOpMinInvocationsNonUniform:   out.debug << "minInvocationsNonUniform";    break;
-    case EOpMaxInvocationsNonUniform:   out.debug << "maxInvocationsNonUniform";    break;
-    case EOpAddInvocationsNonUniform:   out.debug << "addInvocationsNonUniform";    break;
-
-    case EOpMinInvocationsInclusiveScan:            out.debug << "minInvocationsInclusiveScan";             break;
-    case EOpMaxInvocationsInclusiveScan:            out.debug << "maxInvocationsInclusiveScan";             break;
-    case EOpAddInvocationsInclusiveScan:            out.debug << "addInvocationsInclusiveScan";             break;
-    case EOpMinInvocationsInclusiveScanNonUniform:  out.debug << "minInvocationsInclusiveScanNonUniform";   break;
-    case EOpMaxInvocationsInclusiveScanNonUniform:  out.debug << "maxInvocationsInclusiveScanNonUniform";   break;
-    case EOpAddInvocationsInclusiveScanNonUniform:  out.debug << "addInvocationsInclusiveScanNonUniform";   break;
-
-    case EOpMinInvocationsExclusiveScan:            out.debug << "minInvocationsExclusiveScan";             break;
-    case EOpMaxInvocationsExclusiveScan:            out.debug << "maxInvocationsExclusiveScan";             break;
-    case EOpAddInvocationsExclusiveScan:            out.debug << "addInvocationsExclusiveScan";             break;
-    case EOpMinInvocationsExclusiveScanNonUniform:  out.debug << "minInvocationsExclusiveScanNonUniform";   break;
-    case EOpMaxInvocationsExclusiveScanNonUniform:  out.debug << "maxInvocationsExclusiveScanNonUniform";   break;
-    case EOpAddInvocationsExclusiveScanNonUniform:  out.debug << "addInvocationsExclusiveScanNonUniform";   break;
-
-    case EOpMbcnt:                  out.debug << "mbcnt";                       break;
-
-    case EOpFragmentMaskFetch:      out.debug << "fragmentMaskFetchAMD";        break;
-    case EOpFragmentFetch:          out.debug << "fragmentFetchAMD";            break;
-
-    case EOpCubeFaceIndex:          out.debug << "cubeFaceIndex";               break;
-    case EOpCubeFaceCoord:          out.debug << "cubeFaceCoord";               break;
-
-    case EOpSubpassLoad:   out.debug << "subpassLoad";   break;
-    case EOpSubpassLoadMS: out.debug << "subpassLoadMS"; break;
-
-    case EOpConstructReference: out.debug << "Construct reference type"; break;
+    if (visit == EvPreVisit) {
+        tryNewLine(node);
+        switch (node->getOp()) {
+        case EOpNegative:       out.debug << "Negate value";         break;
+        case EOpVectorLogicalNot:
+        case EOpLogicalNot:     out.debug << "Negate conditional";   break;
+        case EOpBitwiseNot:     out.debug << "Bitwise not";          break;
+
+        case EOpPostIncrement:  out.debug << "Post-Increment";       break;
+        case EOpPostDecrement:  out.debug << "Post-Decrement";       break;
+        case EOpPreIncrement:   out.debug << "Pre-Increment";        break;
+        case EOpPreDecrement:   out.debug << "Pre-Decrement";        break;
+        case EOpCopyObject:     out.debug << "copy object";          break;
+
+        // * -> bool
+        case EOpConvInt8ToBool:    out.debug << "Convert int8_t to bool";  break;
+        case EOpConvUint8ToBool:   out.debug << "Convert uint8_t to bool"; break;
+        case EOpConvInt16ToBool:   out.debug << "Convert int16_t to bool"; break;
+        case EOpConvUint16ToBool:  out.debug << "Convert uint16_t to bool";break;
+        case EOpConvIntToBool:     out.debug << "Convert int to bool";     break;
+        case EOpConvUintToBool:    out.debug << "Convert uint to bool";    break;
+        case EOpConvInt64ToBool:   out.debug << "Convert int64 to bool";   break;
+        case EOpConvUint64ToBool:  out.debug << "Convert uint64 to bool";  break;
+        case EOpConvFloat16ToBool: out.debug << "Convert float16_t to bool";   break;
+        case EOpConvFloatToBool:   out.debug << "Convert float to bool";   break;
+        case EOpConvDoubleToBool:  out.debug << "Convert double to bool";  break;
+
+        // bool -> *
+        case EOpConvBoolToInt8:    out.debug << "Convert bool to int8_t";  break;
+        case EOpConvBoolToUint8:   out.debug << "Convert bool to uint8_t"; break;
+        case EOpConvBoolToInt16:   out.debug << "Convert bool to in16t_t"; break;
+        case EOpConvBoolToUint16:  out.debug << "Convert bool to uint16_t";break;
+        case EOpConvBoolToInt:     out.debug << "Convert bool to int"  ;   break;
+        case EOpConvBoolToUint:    out.debug << "Convert bool to uint";    break;
+        case EOpConvBoolToInt64:   out.debug << "Convert bool to int64"; break;
+        case EOpConvBoolToUint64:  out.debug << "Convert bool to uint64";break;
+        case EOpConvBoolToFloat16: out.debug << "Convert bool to float16_t";   break;
+        case EOpConvBoolToFloat:   out.debug << "Convert bool to float";   break;
+        case EOpConvBoolToDouble:  out.debug << "Convert bool to double";   break;
+
+        // int8_t -> (u)int*
+        case EOpConvInt8ToInt16:   out.debug << "Convert int8_t to int16_t";break;
+        case EOpConvInt8ToInt:     out.debug << "Convert int8_t to int";    break;
+        case EOpConvInt8ToInt64:   out.debug << "Convert int8_t to int64";   break;
+        case EOpConvInt8ToUint8:   out.debug << "Convert int8_t to uint8_t";break;
+        case EOpConvInt8ToUint16:  out.debug << "Convert int8_t to uint16_t";break;
+        case EOpConvInt8ToUint:    out.debug << "Convert int8_t to uint";    break;
+        case EOpConvInt8ToUint64:  out.debug << "Convert int8_t to uint64";   break;
+
+        // uint8_t -> (u)int*
+        case EOpConvUint8ToInt8:    out.debug << "Convert uint8_t to int8_t";break;
+        case EOpConvUint8ToInt16:   out.debug << "Convert uint8_t to int16_t";break;
+        case EOpConvUint8ToInt:     out.debug << "Convert uint8_t to int";    break;
+        case EOpConvUint8ToInt64:   out.debug << "Convert uint8_t to int64";   break;
+        case EOpConvUint8ToUint16:  out.debug << "Convert uint8_t to uint16_t";break;
+        case EOpConvUint8ToUint:    out.debug << "Convert uint8_t to uint";    break;
+        case EOpConvUint8ToUint64:  out.debug << "Convert uint8_t to uint64";   break;
+
+        // int8_t -> float*
+        case EOpConvInt8ToFloat16:  out.debug << "Convert int8_t to float16_t";break;
+        case EOpConvInt8ToFloat:    out.debug << "Convert int8_t to float";    break;
+        case EOpConvInt8ToDouble:   out.debug << "Convert int8_t to double";   break;
+
+        // uint8_t -> float*
+        case EOpConvUint8ToFloat16: out.debug << "Convert uint8_t to float16_t";break;
+        case EOpConvUint8ToFloat:   out.debug << "Convert uint8_t to float";    break;
+        case EOpConvUint8ToDouble:  out.debug << "Convert uint8_t to double";   break;
+
+        // int16_t -> (u)int*
+        case EOpConvInt16ToInt8:    out.debug << "Convert int16_t to int8_t";break;
+        case EOpConvInt16ToInt:     out.debug << "Convert int16_t to int";    break;
+        case EOpConvInt16ToInt64:   out.debug << "Convert int16_t to int64";   break;
+        case EOpConvInt16ToUint8:   out.debug << "Convert int16_t to uint8_t";break;
+        case EOpConvInt16ToUint16:  out.debug << "Convert int16_t to uint16_t";break;
+        case EOpConvInt16ToUint:    out.debug << "Convert int16_t to uint";    break;
+        case EOpConvInt16ToUint64:  out.debug << "Convert int16_t to uint64";   break;
+
+        // int16_t -> float*
+        case EOpConvInt16ToFloat16:  out.debug << "Convert int16_t to float16_t";break;
+        case EOpConvInt16ToFloat:    out.debug << "Convert int16_t to float";    break;
+        case EOpConvInt16ToDouble:   out.debug << "Convert int16_t to double";   break;
+
+        // uint16_t -> (u)int*
+        case EOpConvUint16ToInt8:    out.debug << "Convert uint16_t to int8_t";break;
+        case EOpConvUint16ToInt16:   out.debug << "Convert uint16_t to int16_t";break;
+        case EOpConvUint16ToInt:     out.debug << "Convert uint16_t to int";    break;
+        case EOpConvUint16ToInt64:   out.debug << "Convert uint16_t to int64";   break;
+        case EOpConvUint16ToUint8:   out.debug << "Convert uint16_t to uint8_t";break;
+        case EOpConvUint16ToUint:    out.debug << "Convert uint16_t to uint";    break;
+        case EOpConvUint16ToUint64:  out.debug << "Convert uint16_t to uint64";   break;
+
+        // uint16_t -> float*
+        case EOpConvUint16ToFloat16: out.debug << "Convert uint16_t to float16_t";break;
+        case EOpConvUint16ToFloat:   out.debug << "Convert uint16_t to float";    break;
+        case EOpConvUint16ToDouble:  out.debug << "Convert uint16_t to double";   break;
+
+        // int32_t -> (u)int*
+        case EOpConvIntToInt8:    out.debug << "Convert int to int8_t";break;
+        case EOpConvIntToInt16:   out.debug << "Convert int to int16_t";break;
+        case EOpConvIntToInt64:   out.debug << "Convert int to int64";   break;
+        case EOpConvIntToUint8:   out.debug << "Convert int to uint8_t";break;
+        case EOpConvIntToUint16:  out.debug << "Convert int to uint16_t";break;
+        case EOpConvIntToUint:    out.debug << "Convert int to uint";    break;
+        case EOpConvIntToUint64:  out.debug << "Convert int to uint64";   break;
+
+        // int32_t -> float*
+        case EOpConvIntToFloat16:  out.debug << "Convert int to float16_t";break;
+        case EOpConvIntToFloat:    out.debug << "Convert int to float";    break;
+        case EOpConvIntToDouble:   out.debug << "Convert int to double";   break;
+
+        // uint32_t -> (u)int*
+        case EOpConvUintToInt8:    out.debug << "Convert uint to int8_t";break;
+        case EOpConvUintToInt16:   out.debug << "Convert uint to int16_t";break;
+        case EOpConvUintToInt:     out.debug << "Convert uint to int";break;
+        case EOpConvUintToInt64:   out.debug << "Convert uint to int64";   break;
+        case EOpConvUintToUint8:   out.debug << "Convert uint to uint8_t";break;
+        case EOpConvUintToUint16:  out.debug << "Convert uint to uint16_t";break;
+        case EOpConvUintToUint64:  out.debug << "Convert uint to uint64";   break;
+
+        // uint32_t -> float*
+        case EOpConvUintToFloat16: out.debug << "Convert uint to float16_t";break;
+        case EOpConvUintToFloat:   out.debug << "Convert uint to float";    break;
+        case EOpConvUintToDouble:  out.debug << "Convert uint to double";   break;
+
+        // int64 -> (u)int*
+        case EOpConvInt64ToInt8:    out.debug << "Convert int64 to int8_t";  break;
+        case EOpConvInt64ToInt16:   out.debug << "Convert int64 to int16_t"; break;
+        case EOpConvInt64ToInt:     out.debug << "Convert int64 to int";   break;
+        case EOpConvInt64ToUint8:   out.debug << "Convert int64 to uint8_t";break;
+        case EOpConvInt64ToUint16:  out.debug << "Convert int64 to uint16_t";break;
+        case EOpConvInt64ToUint:    out.debug << "Convert int64 to uint";    break;
+        case EOpConvInt64ToUint64:  out.debug << "Convert int64 to uint64";   break;
+
+         // int64 -> float*
+        case EOpConvInt64ToFloat16:  out.debug << "Convert int64 to float16_t";break;
+        case EOpConvInt64ToFloat:    out.debug << "Convert int64 to float";    break;
+        case EOpConvInt64ToDouble:   out.debug << "Convert int64 to double";   break;
+
+        // uint64 -> (u)int*
+        case EOpConvUint64ToInt8:    out.debug << "Convert uint64 to int8_t";break;
+        case EOpConvUint64ToInt16:   out.debug << "Convert uint64 to int16_t";break;
+        case EOpConvUint64ToInt:     out.debug << "Convert uint64 to int";    break;
+        case EOpConvUint64ToInt64:   out.debug << "Convert uint64 to int64";   break;
+        case EOpConvUint64ToUint8:   out.debug << "Convert uint64 to uint8_t";break;
+        case EOpConvUint64ToUint16:  out.debug << "Convert uint64 to uint16";    break;
+        case EOpConvUint64ToUint:    out.debug << "Convert uint64 to uint";   break;
+
+        // uint64 -> float*
+        case EOpConvUint64ToFloat16: out.debug << "Convert uint64 to float16_t";break;
+        case EOpConvUint64ToFloat:   out.debug << "Convert uint64 to float";    break;
+        case EOpConvUint64ToDouble:  out.debug << "Convert uint64 to double";   break;
+
+        // float16_t -> int*
+        case EOpConvFloat16ToInt8:  out.debug << "Convert float16_t to int8_t"; break;
+        case EOpConvFloat16ToInt16: out.debug << "Convert float16_t to int16_t"; break;
+        case EOpConvFloat16ToInt:   out.debug << "Convert float16_t to int"; break;
+        case EOpConvFloat16ToInt64: out.debug << "Convert float16_t to int64"; break;
+
+        // float16_t -> uint*
+        case EOpConvFloat16ToUint8:  out.debug << "Convert float16_t to uint8_t"; break;
+        case EOpConvFloat16ToUint16: out.debug << "Convert float16_t to uint16_t"; break;
+        case EOpConvFloat16ToUint:   out.debug << "Convert float16_t to uint"; break;
+        case EOpConvFloat16ToUint64: out.debug << "Convert float16_t to uint64"; break;
+
+        // float16_t -> float*
+        case EOpConvFloat16ToFloat:  out.debug << "Convert float16_t to float"; break;
+        case EOpConvFloat16ToDouble: out.debug << "Convert float16_t to double"; break;
+
+        // float32 -> float*
+        case EOpConvFloatToFloat16: out.debug << "Convert float to float16_t"; break;
+        case EOpConvFloatToDouble:  out.debug << "Convert float to double"; break;
+
+        // float32_t -> int*
+        case EOpConvFloatToInt8:  out.debug << "Convert float to int8_t"; break;
+        case EOpConvFloatToInt16: out.debug << "Convert float to int16_t"; break;
+        case EOpConvFloatToInt:   out.debug << "Convert float to int"; break;
+        case EOpConvFloatToInt64: out.debug << "Convert float to int64"; break;
+
+        // float32_t -> uint*
+        case EOpConvFloatToUint8:  out.debug << "Convert float to uint8_t"; break;
+        case EOpConvFloatToUint16: out.debug << "Convert float to uint16_t"; break;
+        case EOpConvFloatToUint:   out.debug << "Convert float to uint"; break;
+        case EOpConvFloatToUint64: out.debug << "Convert float to uint64"; break;
+
+        // double -> float*
+        case EOpConvDoubleToFloat16: out.debug << "Convert double to float16_t"; break;
+        case EOpConvDoubleToFloat:   out.debug << "Convert double to float"; break;
+
+        // double -> int*
+        case EOpConvDoubleToInt8:  out.debug << "Convert double to int8_t"; break;
+        case EOpConvDoubleToInt16: out.debug << "Convert double to int16_t"; break;
+        case EOpConvDoubleToInt:   out.debug << "Convert double to int"; break;
+        case EOpConvDoubleToInt64: out.debug << "Convert double to int64"; break;
+
+        // float32_t -> uint*
+        case EOpConvDoubleToUint8:  out.debug << "Convert double to uint8_t"; break;
+        case EOpConvDoubleToUint16: out.debug << "Convert double to uint16_t"; break;
+        case EOpConvDoubleToUint:   out.debug << "Convert double to uint"; break;
+        case EOpConvDoubleToUint64: out.debug << "Convert double to uint64"; break;
+
+        case EOpConvUint64ToPtr:  out.debug << "Convert uint64_t to pointer";   break;
+        case EOpConvPtrToUint64:  out.debug << "Convert pointer to uint64_t";   break;
+
+        case EOpConvUint64ToAccStruct: out.debug << "Convert uint64_t to acceleration structure"; break;
+        case EOpConvUvec2ToAccStruct:  out.debug << "Convert uvec2 to acceleration strucuture "; break;
+
+        case EOpRadians:        out.debug << "radians";              break;
+        case EOpDegrees:        out.debug << "degrees";              break;
+        case EOpSin:            out.debug << "sine";                 break;
+        case EOpCos:            out.debug << "cosine";               break;
+        case EOpTan:            out.debug << "tangent";              break;
+        case EOpAsin:           out.debug << "arc sine";             break;
+        case EOpAcos:           out.debug << "arc cosine";           break;
+        case EOpAtan:           out.debug << "arc tangent";          break;
+        case EOpSinh:           out.debug << "hyp. sine";            break;
+        case EOpCosh:           out.debug << "hyp. cosine";          break;
+        case EOpTanh:           out.debug << "hyp. tangent";         break;
+        case EOpAsinh:          out.debug << "arc hyp. sine";        break;
+        case EOpAcosh:          out.debug << "arc hyp. cosine";      break;
+        case EOpAtanh:          out.debug << "arc hyp. tangent";     break;
+
+        case EOpExp:            out.debug << "exp";                  break;
+        case EOpLog:            out.debug << "log";                  break;
+        case EOpExp2:           out.debug << "exp2";                 break;
+        case EOpLog2:           out.debug << "log2";                 break;
+        case EOpSqrt:           out.debug << "sqrt";                 break;
+        case EOpInverseSqrt:    out.debug << "inverse sqrt";         break;
+
+        case EOpAbs:            out.debug << "Absolute value";       break;
+        case EOpSign:           out.debug << "Sign";                 break;
+        case EOpFloor:          out.debug << "Floor";                break;
+        case EOpTrunc:          out.debug << "trunc";                break;
+        case EOpRound:          out.debug << "round";                break;
+        case EOpRoundEven:      out.debug << "roundEven";            break;
+        case EOpCeil:           out.debug << "Ceiling";              break;
+        case EOpFract:          out.debug << "Fraction";             break;
+
+        case EOpIsNan:          out.debug << "isnan";                break;
+        case EOpIsInf:          out.debug << "isinf";                break;
+
+        case EOpFloatBitsToInt: out.debug << "floatBitsToInt";       break;
+        case EOpFloatBitsToUint:out.debug << "floatBitsToUint";      break;
+        case EOpIntBitsToFloat: out.debug << "intBitsToFloat";       break;
+        case EOpUintBitsToFloat:out.debug << "uintBitsToFloat";      break;
+        case EOpDoubleBitsToInt64:  out.debug << "doubleBitsToInt64";  break;
+        case EOpDoubleBitsToUint64: out.debug << "doubleBitsToUint64"; break;
+        case EOpInt64BitsToDouble:  out.debug << "int64BitsToDouble";  break;
+        case EOpUint64BitsToDouble: out.debug << "uint64BitsToDouble"; break;
+        case EOpFloat16BitsToInt16:  out.debug << "float16BitsToInt16";  break;
+        case EOpFloat16BitsToUint16: out.debug << "float16BitsToUint16"; break;
+        case EOpInt16BitsToFloat16:  out.debug << "int16BitsToFloat16";  break;
+        case EOpUint16BitsToFloat16: out.debug << "uint16BitsToFloat16"; break;
+
+        case EOpPackSnorm2x16:  out.debug << "packSnorm2x16";        break;
+        case EOpUnpackSnorm2x16:out.debug << "unpackSnorm2x16";      break;
+        case EOpPackUnorm2x16:  out.debug << "packUnorm2x16";        break;
+        case EOpUnpackUnorm2x16:out.debug << "unpackUnorm2x16";      break;
+        case EOpPackHalf2x16:   out.debug << "packHalf2x16";         break;
+        case EOpUnpackHalf2x16: out.debug << "unpackHalf2x16";       break;
+        case EOpPack16:           out.debug << "pack16";                 break;
+        case EOpPack32:           out.debug << "pack32";                 break;
+        case EOpPack64:           out.debug << "pack64";                 break;
+        case EOpUnpack32:         out.debug << "unpack32";               break;
+        case EOpUnpack16:         out.debug << "unpack16";               break;
+        case EOpUnpack8:          out.debug << "unpack8";               break;
+
+        case EOpPackSnorm4x8:     out.debug << "PackSnorm4x8";       break;
+        case EOpUnpackSnorm4x8:   out.debug << "UnpackSnorm4x8";     break;
+        case EOpPackUnorm4x8:     out.debug << "PackUnorm4x8";       break;
+        case EOpUnpackUnorm4x8:   out.debug << "UnpackUnorm4x8";     break;
+        case EOpPackDouble2x32:   out.debug << "PackDouble2x32";     break;
+        case EOpUnpackDouble2x32: out.debug << "UnpackDouble2x32";   break;
+
+        case EOpPackInt2x32:      out.debug << "packInt2x32";        break;
+        case EOpUnpackInt2x32:    out.debug << "unpackInt2x32";      break;
+        case EOpPackUint2x32:     out.debug << "packUint2x32";       break;
+        case EOpUnpackUint2x32:   out.debug << "unpackUint2x32";     break;
+
+        case EOpPackInt2x16:      out.debug << "packInt2x16";        break;
+        case EOpUnpackInt2x16:    out.debug << "unpackInt2x16";      break;
+        case EOpPackUint2x16:     out.debug << "packUint2x16";       break;
+        case EOpUnpackUint2x16:   out.debug << "unpackUint2x16";     break;
+
+        case EOpPackInt4x16:      out.debug << "packInt4x16";        break;
+        case EOpUnpackInt4x16:    out.debug << "unpackInt4x16";      break;
+        case EOpPackUint4x16:     out.debug << "packUint4x16";       break;
+        case EOpUnpackUint4x16:   out.debug << "unpackUint4x16";     break;
+        case EOpPackFloat2x16:    out.debug << "packFloat2x16";      break;
+        case EOpUnpackFloat2x16:  out.debug << "unpackFloat2x16";    break;
+
+        case EOpLength:         out.debug << "length";               break;
+        case EOpNormalize:      out.debug << "normalize";            break;
+        case EOpDPdx:           out.debug << "dPdx";                 break;
+        case EOpDPdy:           out.debug << "dPdy";                 break;
+        case EOpFwidth:         out.debug << "fwidth";               break;
+        case EOpDPdxFine:       out.debug << "dPdxFine";             break;
+        case EOpDPdyFine:       out.debug << "dPdyFine";             break;
+        case EOpFwidthFine:     out.debug << "fwidthFine";           break;
+        case EOpDPdxCoarse:     out.debug << "dPdxCoarse";           break;
+        case EOpDPdyCoarse:     out.debug << "dPdyCoarse";           break;
+        case EOpFwidthCoarse:   out.debug << "fwidthCoarse";         break;
+
+        case EOpInterpolateAtCentroid: out.debug << "interpolateAtCentroid";  break;
+
+        case EOpDeterminant:    out.debug << "determinant";          break;
+        case EOpMatrixInverse:  out.debug << "inverse";              break;
+        case EOpTranspose:      out.debug << "transpose";            break;
+
+        case EOpAny:            out.debug << "any";                  break;
+        case EOpAll:            out.debug << "all";                  break;
+
+        case EOpArrayLength:    out.debug << "array length";         break;
+
+        case EOpEmitStreamVertex:   out.debug << "EmitStreamVertex";   break;
+        case EOpEndStreamPrimitive: out.debug << "EndStreamPrimitive"; break;
+
+        case EOpAtomicCounterIncrement: out.debug << "AtomicCounterIncrement";break;
+        case EOpAtomicCounterDecrement: out.debug << "AtomicCounterDecrement";break;
+        case EOpAtomicCounter:          out.debug << "AtomicCounter";         break;
+
+        case EOpTextureQuerySize:       out.debug << "textureSize";           break;
+        case EOpTextureQueryLod:        out.debug << "textureQueryLod";       break;
+        case EOpTextureQueryLevels:     out.debug << "textureQueryLevels";    break;
+        case EOpTextureQuerySamples:    out.debug << "textureSamples";        break;
+        case EOpImageQuerySize:         out.debug << "imageQuerySize";        break;
+        case EOpImageQuerySamples:      out.debug << "imageQuerySamples";     break;
+        case EOpImageLoad:              out.debug << "imageLoad";             break;
+
+        case EOpBitFieldReverse:        out.debug << "bitFieldReverse";       break;
+        case EOpBitCount:               out.debug << "bitCount";              break;
+        case EOpFindLSB:                out.debug << "findLSB";               break;
+        case EOpFindMSB:                out.debug << "findMSB";               break;
+
+        case EOpCountLeadingZeros:      out.debug << "countLeadingZeros";     break;
+        case EOpCountTrailingZeros:     out.debug << "countTrailingZeros";    break;
+
+        case EOpNoise:                  out.debug << "noise";                 break;
+
+        case EOpBallot:                 out.debug << "ballot";                break;
+        case EOpReadFirstInvocation:    out.debug << "readFirstInvocation";   break;
+
+        case EOpAnyInvocation:          out.debug << "anyInvocation";         break;
+        case EOpAllInvocations:         out.debug << "allInvocations";        break;
+        case EOpAllInvocationsEqual:    out.debug << "allInvocationsEqual";   break;
+
+        case EOpSubgroupElect:                   out.debug << "subgroupElect";                   break;
+        case EOpSubgroupAll:                     out.debug << "subgroupAll";                     break;
+        case EOpSubgroupAny:                     out.debug << "subgroupAny";                     break;
+        case EOpSubgroupAllEqual:                out.debug << "subgroupAllEqual";                break;
+        case EOpSubgroupBroadcast:               out.debug << "subgroupBroadcast";               break;
+        case EOpSubgroupBroadcastFirst:          out.debug << "subgroupBroadcastFirst";          break;
+        case EOpSubgroupBallot:                  out.debug << "subgroupBallot";                  break;
+        case EOpSubgroupInverseBallot:           out.debug << "subgroupInverseBallot";           break;
+        case EOpSubgroupBallotBitExtract:        out.debug << "subgroupBallotBitExtract";        break;
+        case EOpSubgroupBallotBitCount:          out.debug << "subgroupBallotBitCount";          break;
+        case EOpSubgroupBallotInclusiveBitCount: out.debug << "subgroupBallotInclusiveBitCount"; break;
+        case EOpSubgroupBallotExclusiveBitCount: out.debug << "subgroupBallotExclusiveBitCount"; break;
+        case EOpSubgroupBallotFindLSB:           out.debug << "subgroupBallotFindLSB";           break;
+        case EOpSubgroupBallotFindMSB:           out.debug << "subgroupBallotFindMSB";           break;
+        case EOpSubgroupShuffle:                 out.debug << "subgroupShuffle";                 break;
+        case EOpSubgroupShuffleXor:              out.debug << "subgroupShuffleXor";              break;
+        case EOpSubgroupShuffleUp:               out.debug << "subgroupShuffleUp";               break;
+        case EOpSubgroupShuffleDown:             out.debug << "subgroupShuffleDown";             break;
+        case EOpSubgroupAdd:                     out.debug << "subgroupAdd";                     break;
+        case EOpSubgroupMul:                     out.debug << "subgroupMul";                     break;
+        case EOpSubgroupMin:                     out.debug << "subgroupMin";                     break;
+        case EOpSubgroupMax:                     out.debug << "subgroupMax";                     break;
+        case EOpSubgroupAnd:                     out.debug << "subgroupAnd";                     break;
+        case EOpSubgroupOr:                      out.debug << "subgroupOr";                      break;
+        case EOpSubgroupXor:                     out.debug << "subgroupXor";                     break;
+        case EOpSubgroupInclusiveAdd:            out.debug << "subgroupInclusiveAdd";            break;
+        case EOpSubgroupInclusiveMul:            out.debug << "subgroupInclusiveMul";            break;
+        case EOpSubgroupInclusiveMin:            out.debug << "subgroupInclusiveMin";            break;
+        case EOpSubgroupInclusiveMax:            out.debug << "subgroupInclusiveMax";            break;
+        case EOpSubgroupInclusiveAnd:            out.debug << "subgroupInclusiveAnd";            break;
+        case EOpSubgroupInclusiveOr:             out.debug << "subgroupInclusiveOr";             break;
+        case EOpSubgroupInclusiveXor:            out.debug << "subgroupInclusiveXor";            break;
+        case EOpSubgroupExclusiveAdd:            out.debug << "subgroupExclusiveAdd";            break;
+        case EOpSubgroupExclusiveMul:            out.debug << "subgroupExclusiveMul";            break;
+        case EOpSubgroupExclusiveMin:            out.debug << "subgroupExclusiveMin";            break;
+        case EOpSubgroupExclusiveMax:            out.debug << "subgroupExclusiveMax";            break;
+        case EOpSubgroupExclusiveAnd:            out.debug << "subgroupExclusiveAnd";            break;
+        case EOpSubgroupExclusiveOr:             out.debug << "subgroupExclusiveOr";             break;
+        case EOpSubgroupExclusiveXor:            out.debug << "subgroupExclusiveXor";            break;
+        case EOpSubgroupClusteredAdd:            out.debug << "subgroupClusteredAdd";            break;
+        case EOpSubgroupClusteredMul:            out.debug << "subgroupClusteredMul";            break;
+        case EOpSubgroupClusteredMin:            out.debug << "subgroupClusteredMin";            break;
+        case EOpSubgroupClusteredMax:            out.debug << "subgroupClusteredMax";            break;
+        case EOpSubgroupClusteredAnd:            out.debug << "subgroupClusteredAnd";            break;
+        case EOpSubgroupClusteredOr:             out.debug << "subgroupClusteredOr";             break;
+        case EOpSubgroupClusteredXor:            out.debug << "subgroupClusteredXor";            break;
+        case EOpSubgroupQuadBroadcast:           out.debug << "subgroupQuadBroadcast";           break;
+        case EOpSubgroupQuadSwapHorizontal:      out.debug << "subgroupQuadSwapHorizontal";      break;
+        case EOpSubgroupQuadSwapVertical:        out.debug << "subgroupQuadSwapVertical";        break;
+        case EOpSubgroupQuadSwapDiagonal:        out.debug << "subgroupQuadSwapDiagonal";        break;
+
+        case EOpSubgroupPartition:                          out.debug << "subgroupPartitionNV";                          break;
+        case EOpSubgroupPartitionedAdd:                     out.debug << "subgroupPartitionedAddNV";                     break;
+        case EOpSubgroupPartitionedMul:                     out.debug << "subgroupPartitionedMulNV";                     break;
+        case EOpSubgroupPartitionedMin:                     out.debug << "subgroupPartitionedMinNV";                     break;
+        case EOpSubgroupPartitionedMax:                     out.debug << "subgroupPartitionedMaxNV";                     break;
+        case EOpSubgroupPartitionedAnd:                     out.debug << "subgroupPartitionedAndNV";                     break;
+        case EOpSubgroupPartitionedOr:                      out.debug << "subgroupPartitionedOrNV";                      break;
+        case EOpSubgroupPartitionedXor:                     out.debug << "subgroupPartitionedXorNV";                     break;
+        case EOpSubgroupPartitionedInclusiveAdd:            out.debug << "subgroupPartitionedInclusiveAddNV";            break;
+        case EOpSubgroupPartitionedInclusiveMul:            out.debug << "subgroupPartitionedInclusiveMulNV";            break;
+        case EOpSubgroupPartitionedInclusiveMin:            out.debug << "subgroupPartitionedInclusiveMinNV";            break;
+        case EOpSubgroupPartitionedInclusiveMax:            out.debug << "subgroupPartitionedInclusiveMaxNV";            break;
+        case EOpSubgroupPartitionedInclusiveAnd:            out.debug << "subgroupPartitionedInclusiveAndNV";            break;
+        case EOpSubgroupPartitionedInclusiveOr:             out.debug << "subgroupPartitionedInclusiveOrNV";             break;
+        case EOpSubgroupPartitionedInclusiveXor:            out.debug << "subgroupPartitionedInclusiveXorNV";            break;
+        case EOpSubgroupPartitionedExclusiveAdd:            out.debug << "subgroupPartitionedExclusiveAddNV";            break;
+        case EOpSubgroupPartitionedExclusiveMul:            out.debug << "subgroupPartitionedExclusiveMulNV";            break;
+        case EOpSubgroupPartitionedExclusiveMin:            out.debug << "subgroupPartitionedExclusiveMinNV";            break;
+        case EOpSubgroupPartitionedExclusiveMax:            out.debug << "subgroupPartitionedExclusiveMaxNV";            break;
+        case EOpSubgroupPartitionedExclusiveAnd:            out.debug << "subgroupPartitionedExclusiveAndNV";            break;
+        case EOpSubgroupPartitionedExclusiveOr:             out.debug << "subgroupPartitionedExclusiveOrNV";             break;
+        case EOpSubgroupPartitionedExclusiveXor:            out.debug << "subgroupPartitionedExclusiveXorNV";            break;
+
+        case EOpClip:                   out.debug << "clip";                  break;
+        case EOpIsFinite:               out.debug << "isfinite";              break;
+        case EOpLog10:                  out.debug << "log10";                 break;
+        case EOpRcp:                    out.debug << "rcp";                   break;
+        case EOpSaturate:               out.debug << "saturate";              break;
+
+        case EOpSparseTexelsResident:   out.debug << "sparseTexelsResident";  break;
+
+        case EOpMinInvocations:             out.debug << "minInvocations";              break;
+        case EOpMaxInvocations:             out.debug << "maxInvocations";              break;
+        case EOpAddInvocations:             out.debug << "addInvocations";              break;
+        case EOpMinInvocationsNonUniform:   out.debug << "minInvocationsNonUniform";    break;
+        case EOpMaxInvocationsNonUniform:   out.debug << "maxInvocationsNonUniform";    break;
+        case EOpAddInvocationsNonUniform:   out.debug << "addInvocationsNonUniform";    break;
+
+        case EOpMinInvocationsInclusiveScan:            out.debug << "minInvocationsInclusiveScan";             break;
+        case EOpMaxInvocationsInclusiveScan:            out.debug << "maxInvocationsInclusiveScan";             break;
+        case EOpAddInvocationsInclusiveScan:            out.debug << "addInvocationsInclusiveScan";             break;
+        case EOpMinInvocationsInclusiveScanNonUniform:  out.debug << "minInvocationsInclusiveScanNonUniform";   break;
+        case EOpMaxInvocationsInclusiveScanNonUniform:  out.debug << "maxInvocationsInclusiveScanNonUniform";   break;
+        case EOpAddInvocationsInclusiveScanNonUniform:  out.debug << "addInvocationsInclusiveScanNonUniform";   break;
+
+        case EOpMinInvocationsExclusiveScan:            out.debug << "minInvocationsExclusiveScan";             break;
+        case EOpMaxInvocationsExclusiveScan:            out.debug << "maxInvocationsExclusiveScan";             break;
+        case EOpAddInvocationsExclusiveScan:            out.debug << "addInvocationsExclusiveScan";             break;
+        case EOpMinInvocationsExclusiveScanNonUniform:  out.debug << "minInvocationsExclusiveScanNonUniform";   break;
+        case EOpMaxInvocationsExclusiveScanNonUniform:  out.debug << "maxInvocationsExclusiveScanNonUniform";   break;
+        case EOpAddInvocationsExclusiveScanNonUniform:  out.debug << "addInvocationsExclusiveScanNonUniform";   break;
+
+        case EOpMbcnt:                  out.debug << "mbcnt";                       break;
+
+        case EOpFragmentMaskFetch:      out.debug << "fragmentMaskFetchAMD";        break;
+        case EOpFragmentFetch:          out.debug << "fragmentFetchAMD";            break;
+
+        case EOpCubeFaceIndex:          out.debug << "cubeFaceIndex";               break;
+        case EOpCubeFaceCoord:          out.debug << "cubeFaceCoord";               break;
+
+        case EOpSubpassLoad:   out.debug << "subpassLoad";   break;
+        case EOpSubpassLoadMS: out.debug << "subpassLoadMS"; break;
+
+        case EOpConstructReference: out.debug << "Construct reference type"; break;
 
 #ifndef GLSLANG_WEB
-    case EOpSpirvInst: out.debug << "spirv_instruction"; break;
+        case EOpSpirvInst: out.debug << "spirv_instruction"; break;
 #endif
 
-    default: out.debug.message(EPrefixError, "Bad unary op");
+        default: out.debug.message(EPrefixError, "Bad unary op");
+        }
     }
+    else if (visit == EvInVisit) {
 
-    out.debug << " (" << node->getCompleteString() << ")";
+    }
+    else if (visit == EvPostVisit) {
 
-    out.debug << "\n";
+    }
 
     return true;
 }
