@@ -194,14 +194,20 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
         case EOpLeftShiftAssign:          out.debug << " <<= "; break;
         case EOpRightShiftAssign:         out.debug << " >>= "; break;
 
-        case EOpIndexDirect:   out.debug << "direct index";   break;
-        case EOpIndexIndirect: out.debug << "indirect index"; break;
+        case EOpIndexDirect:
+        case EOpIndexIndirect: out.debug << "["; break;
         case EOpIndexDirectStruct:
             {
+                if (!skipped) {
+                    out.debug << ".";
+                }
+                else {
+                    skipped = false;
+                }
                 bool reference = node->getLeft()->getType().isReference();
                 const TTypeList *members = reference ? node->getLeft()->getType().getReferentType()->getStruct() : node->getLeft()->getType().getStruct();
                 out.debug << (*members)[node->getRight()->getAsConstantUnion()->getConstArray()[0].getIConst()].type->getFieldName();
-                out.debug << ": direct index for structure";      break;
+                break;
             }
         case EOpVectorSwizzle: {
             swizzling = true;
@@ -253,6 +259,8 @@ bool TConvertTraverser::visitBinary(TVisit visit, TIntermBinary* node)
     }
     else if (visit == EvPostVisit) {
         switch (node->getOp()) {
+        case EOpIndexDirect:
+        case EOpIndexIndirect:   out.debug << "]";   break;
         case EOpVectorSwizzle: {
             swizzling = false;
             sequenceSeperator.pop();
